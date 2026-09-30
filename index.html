@@ -134,7 +134,8 @@ input,select,textarea,button{font-family:inherit;}
 .chart-title.alt::before{background:var(--accent2);}
 .chart-title.gold::before{background:var(--gold);}
 .chart-title .ct-right{margin-left:auto;font-family:'JetBrains Mono';font-size:12px;letter-spacing:0;text-transform:none;}
-.chart-box{position:relative;height:250px;}
+.chart-box{position:relative;height:250px;width:100%;min-width:0;}
+.chart-box > canvas{display:block;width:100% !important;height:100% !important;}
 .chart-box.tall{height:280px;}
 .chart-empty{color:var(--muted);text-align:center;padding:56px 0;font-size:13px;}
 .legend-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;justify-content:center;}
@@ -993,6 +994,7 @@ function setTab(id){
   placePeriodBar(id);
   if (typeof syncMobileChrome === 'function') syncMobileChrome();
   renderAll();
+  if (typeof reajustaLuego === 'function') reajustaLuego();
 }
 const TABS_CON_PERIODO = ['resumen','ingresos','registro'];
 function placePeriodBar(id){
@@ -1064,6 +1066,7 @@ function upsertChart(id, cfg){
       ch.data.labels = cfg.data.labels;
       cfg.data.datasets.forEach((d,i)=>Object.assign(ch.data.datasets[i], d));
       ch.update('none');          // 'none' = sin animación de transición
+      if (cv.parentElement && Math.abs(ch.width - cv.parentElement.clientWidth) > 2) ch.resize();
       return ch;
     } catch(e){ /* si algo no encaja, se recrea */ }
   }
@@ -1748,7 +1751,7 @@ function applyImport(txt){
     DB.records = {sergio:cleanRecs(data.records&&data.records.sergio), comunes:cleanRecs(data.records&&data.records.comunes)};
     DB.recurr  = {sergio:cleanRcr(data.recurrences&&data.recurrences.sergio), comunes:cleanRcr(data.recurrences&&data.recurrences.comunes)};
     (data.records&&data.records.sergio||[]).concat(data.records&&data.records.comunes||[]).forEach(()=>{});
-    saveAll(); closeModal('mBackup'); renderAll(); toast('Copia importada correctamente');
+    saveAll(); closeModal('mBackup'); renderAll(); if (typeof reajustaLuego === 'function') { setTimeout(reajustaGraficos, 300); setTimeout(reajustaGraficos, 1200); } toast('Copia importada correctamente');
   } catch(e){ document.getElementById('bk-msg').textContent = 'El texto/archivo no es una copia válida.'; }
 }
 function importFile(inp){
@@ -1964,6 +1967,15 @@ async function exportBackup(){
   const vacio = !DB.categories.length && !DB.records.sergio.length && !DB.records.comunes.length;
   if (vacio) setTimeout(()=>{ openBackup(); document.getElementById('bk-msg').innerHTML = '👋 <b>Bienvenido.</b> Este dispositivo aún no tiene datos: pulsa «Importar desde archivo» y elige tu copia <b>.json</b>, o empieza de cero cerrando esta ventana.'; }, 300);
 })();
+
+/* ═══════════ AJUSTE DE GRÁFICOS AL ANCHO REAL ═══════════ */
+function reajustaGraficos(){ Object.values(CH).forEach(c=>{ try{ if(c.canvas && c.canvas.offsetParent) c.resize(); }catch(e){} }); }
+let _rgT = null;
+const reajustaLuego = () => { clearTimeout(_rgT); _rgT = setTimeout(reajustaGraficos, 120); };
+['resize','pageshow','load','focus'].forEach(ev=>window.addEventListener(ev, reajustaLuego));
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) setTimeout(reajustaGraficos, 250); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(reajustaLuego);
+[400, 1200, 2500].forEach(t=>setTimeout(reajustaGraficos, t));
 
 /* ═══════════ APP INSTALABLE (PWA) ═══════════ */
 let _promptInstalar = null;
