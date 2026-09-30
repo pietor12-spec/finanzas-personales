@@ -1,8 +1,8 @@
 /* Finanzas Personales — service worker: funciona sin conexión y se actualiza solo */
-const CACHE = 'finanzas-v1.0.1';
+const CACHE = 'finanzas-v1.0.2';
 const CDN = ['fonts.googleapis.com','fonts.gstatic.com','cdnjs.cloudflare.com','cdn.jsdelivr.net'];
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './logo.svg',
-  './icon-192.png', './icon-512.png', './maskable-512.png',
+  './icon-192.png', './icon-512.png', './maskable-v2-192.png', './maskable-v2-512.png',
   './apple-touch-icon.png', './favicon-32.png'];
 
 self.addEventListener('install', e => {
