@@ -718,9 +718,14 @@ body.view-mobile #mvChrome{display:block;position:sticky;top:0;z-index:80;
   background:#0a1220;                       /* opaco: sin desenfoque de fondo */
   border-bottom:1px solid rgba(0,229,255,0.18);padding:12px 12px 0;}
 body.view-mobile .header,
-body.view-mobile .nav-drawer,
-body.view-mobile .nav-overlay,
 body.view-mobile #periodHost{display:none !important;}
+.mvc-burger{background:var(--surface2);border:1px solid var(--border);border-radius:11px;color:var(--text);font-size:20px;line-height:1;padding:10px 12px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.mvc-burger:active{border-color:var(--accent);color:var(--accent);}
+.mvc-section{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;border-bottom:2px solid var(--accent);color:var(--accent);font-family:'Syne';font-size:14px;font-weight:700;padding:12px 2px 11px;margin-top:6px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
+.mvc-section svg{width:17px;height:17px;flex-shrink:0;}
+.mvc-section .mvc-sec-hint{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted);}
+body.view-mobile .nav-drawer{width:290px;padding:18px 14px calc(18px + env(safe-area-inset-bottom));}
+body.view-mobile .tab-nav-drawer .tab-btn{font-size:15.5px;padding:15px 15px;}
 
 .mvc-top{display:flex;align-items:center;gap:11px;}
 .mvc-brand{flex:1;min-width:0;}
@@ -846,6 +851,7 @@ body.view-mobile .fab-add{display:block;}
 
 <div id="mvChrome">
   <div class="mvc-top">
+    <button class="mvc-burger" onclick="openDrawer()" aria-label="Menú">☰</button>
     <img class="logo-mark logo-img" src="logo.svg" alt="Finanzas Personales">
     <div class="mvc-brand">
       <div class="mvc-title">Finanzas <span>Personales</span></div>
@@ -857,7 +863,7 @@ body.view-mobile .fab-add{display:block;}
     <button class="mvc-pb active" data-prof="sergio" onclick="setProfile('sergio')">👤 Sergio</button>
     <button class="mvc-pb" data-prof="comunes" onclick="setProfile('comunes')">👥 Comunes</button>
   </div>
-  <div class="mvc-tabs" id="mvcTabs"></div>
+  <button class="mvc-section" id="mvcSection" onclick="openDrawer()"></button>
 </div>
 <div id="mvPeriodSlot"></div>
 
@@ -982,7 +988,7 @@ const NAV = [
   {id:'anual', label:'Resumen anual'}
 ];
 function buildNav(){
-  document.getElementById('drawerNav').innerHTML = NAV.map(n=>`<button class="tab-btn${n.id===ST.tab?' active':''}" data-tab="${n.id}" onclick="setTab('${n.id}');closeDrawer()">${ICON[n.id]}<span>${n.label}</span></button>`).join('');
+  document.getElementById('drawerNav').innerHTML = NAV.map(n=>`<button class="tab-btn${n.id===ST.tab?' active':''}" data-tab="${n.id}" onclick="setTab('${n.id}');closeDrawer();window.scrollTo(0,0)">${ICON[n.id]}<span>${n.label}</span></button>`).join('');
 }
 function setTab(id){
   ST.tab = id;
@@ -1811,15 +1817,13 @@ if (MQ_MOVIL.addEventListener) MQ_MOVIL.addEventListener('change', _onMQ);
 else if (MQ_MOVIL.addListener) MQ_MOVIL.addListener(_onMQ);
 
 /* ── pestañas del móvil: las mismas del dashboard ── */
-function buildMobileTabs(){
-  document.getElementById('mvcTabs').innerHTML = NAV.map(n=>
-    `<button class="mvc-tab${n.id===ST.tab?' active':''}" data-tab="${n.id}" onclick="setTab('${n.id}');window.scrollTo(0,0)">${ICON[n.id]}<span>${n.label}</span></button>`
-  ).join('');
-}
+/* móvil: sin barra deslizante; la sección actual abre el menú lateral */
+function buildMobileTabs(){ syncMobileChrome(); }
 function syncMobileChrome(){
   document.querySelectorAll('.mvc-pb').forEach(b=>b.classList.toggle('active', b.dataset.prof===ST.profile));
-  const act = document.querySelector('.mvc-tab.active');
-  if (act && act.scrollIntoView) act.scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'});
+  const sec = document.getElementById('mvcSection');
+  const n = NAV.find(x=>x.id===ST.tab) || NAV[0];
+  if (sec) sec.innerHTML = `${ICON[n.id]}<span>${n.label}</span><span class="mvc-sec-hint">☰ Secciones</span>`;
 }
 
 
@@ -1970,8 +1974,8 @@ async function exportBackup(){
 
 /* ═══════════ AJUSTE DE GRÁFICOS AL ANCHO REAL ═══════════ */
 function reajustaGraficos(){ Object.values(CH).forEach(c=>{ try{ if(c.canvas && c.canvas.offsetParent) c.resize(); }catch(e){} }); }
-let _rgT = null;
-const reajustaLuego = () => { clearTimeout(_rgT); _rgT = setTimeout(reajustaGraficos, 120); };
+var _rgT = null;
+function reajustaLuego(){ clearTimeout(_rgT); _rgT = setTimeout(reajustaGraficos, 120); }
 ['resize','pageshow','load','focus'].forEach(ev=>window.addEventListener(ev, reajustaLuego));
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) setTimeout(reajustaGraficos, 250); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(reajustaLuego);
