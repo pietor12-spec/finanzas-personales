@@ -721,6 +721,7 @@ body.view-mobile .header,
 body.view-mobile #periodHost{display:none !important;}
 .mvc-burger{background:var(--surface2);border:1px solid var(--border);border-radius:11px;color:var(--text);font-size:20px;line-height:1;padding:10px 12px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
 .mvc-burger:active{border-color:var(--accent);color:var(--accent);}
+.mvc-sep{height:2px;background:var(--accent);margin:12px -12px 0;opacity:.85;}
 .mvc-section{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;border-bottom:2px solid var(--accent);color:var(--accent);font-family:'Syne';font-size:14px;font-weight:700;padding:12px 2px 11px;margin-top:6px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
 .mvc-section svg{width:17px;height:17px;flex-shrink:0;}
 .mvc-section .mvc-sec-hint{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted);}
@@ -857,13 +858,12 @@ body.view-mobile .fab-add{display:block;}
       <div class="mvc-title">Finanzas <span>Personales</span></div>
       <div class="mv-sync" id="mvSync"><i></i><span>Conectando…</span></div>
     </div>
-    <button class="mvc-ico" onclick="openBackup()" title="Copia de seguridad">💾</button>
   </div>
   <div class="mvc-prof">
     <button class="mvc-pb active" data-prof="sergio" onclick="setProfile('sergio')">👤 Sergio</button>
     <button class="mvc-pb" data-prof="comunes" onclick="setProfile('comunes')">👥 Comunes</button>
   </div>
-  <button class="mvc-section" id="mvcSection" onclick="openDrawer()"></button>
+  <div class="mvc-sep"></div>
 </div>
 <div id="mvPeriodSlot"></div>
 
