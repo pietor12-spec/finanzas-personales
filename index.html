@@ -449,6 +449,13 @@ body:not(.view-mobile) #tab-anual .year-card .yrow{justify-content:flex-start;ga
 body:not(.view-mobile) #tab-anual .year-card .yrow span:first-child{flex:0 0 50%;font-size:14.5px !important;}
 body:not(.view-mobile) #tab-anual .year-card .year-head h3{font-size:20px !important;}
 .more-rows{display:none;}
+/* v1.5.1 — móvil: título más grande y centrado; estado de guardado pequeño arriba a la derecha */
+body.view-mobile #mvChrome{padding-top:22px !important;}
+body.view-mobile .mvc-top{position:relative;}
+body.view-mobile .mvc-brand{text-align:center;padding-right:54px;}
+body.view-mobile .mvc-title{font-size:20px;letter-spacing:-.5px;}
+body.view-mobile .mv-sync{position:absolute;top:-15px;right:0;margin:0;font-size:8.5px;gap:4px;opacity:.85;}
+body.view-mobile .mv-sync i{width:5px;height:5px;}
 /* v1.4.4 — móvil: título dentro del rosco y totales grandes en Ingresos y Gastos, igual que en el escritorio */
 body.view-mobile .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;}
 body.view-mobile .donut-center b{font-family:'Syne';font-size:11.5px;font-weight:800;letter-spacing:.2px;color:var(--text);text-transform:uppercase;}
