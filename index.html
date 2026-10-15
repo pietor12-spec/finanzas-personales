@@ -524,11 +524,11 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 <div class="tab-content fit active" id="tab-resumen">
   <div class="kpi-grid cols3">
     <div class="kpi-card hero hero-green"><div class="kpi-label">Ingresos totales</div><div class="kpi-value up" id="k-ing">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Balance</div><div class="kpi-value" id="k-bal">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Tasa de ahorro</div><div class="kpi-value" id="k-tasa">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Ingreso medio / mes</div><div class="kpi-value up" id="k-imed">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Balance</div><div class="kpi-value gold" id="k-bal">—</div></div>
     <div class="kpi-card hero hero-red"><div class="kpi-label">Gastos totales</div><div class="kpi-value down" id="k-gas">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Gasto medio / mes</div><div class="kpi-value down" id="k-gmed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Movimientos</div><div class="kpi-value purple" id="k-mov">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Tasa de ahorro</div><div class="kpi-value accent" id="k-tasa">—</div></div>
   </div>
 
   <div class="section-grid grid-2" style="margin-top:24px">
@@ -1339,9 +1339,9 @@ function renderResumen(){
   const set = (id,txt,cls) => { const e=document.getElementById(id); e.textContent=txt; if(cls!==undefined){ e.className='kpi-value '+cls; } };
   set('k-ing', eur(ing), 'up');
   set('k-gas', eur(gas), 'down');
-  set('k-bal', eur(bal), bal>=0?'up':'down');
-  set('k-tasa', ing>0 ? Math.round(bal/ing*100)+'%' : '—', bal>=0?'up':'down');
-  set('k-mov', String(pr.length), 'purple');
+  set('k-bal', eur(bal), 'gold');
+  set('k-tasa', ing>0 ? Math.round(bal/ing*100)+'%' : '—', 'accent');
+  set('k-imed', eur0(ing/meses), 'up');
   set('k-gmed', eur0(gas/meses), 'down');
   document.getElementById('ct-evo').textContent = periodoLabel();
 
