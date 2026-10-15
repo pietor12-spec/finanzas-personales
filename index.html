@@ -372,6 +372,21 @@ body.modal-open{overflow:hidden;}
 .lg-val em{font-style:normal;font-family:'JetBrains Mono';font-size:11px;color:var(--muted);min-width:32px;text-align:right;}
 @media(max-width:1100px){.donut-wrap{flex-direction:column;}.donut-wrap .donut-box{flex:none;width:100%;max-width:260px;}.legend-col{width:100%;}}
 .logo-img{background:none!important;padding:0;object-fit:contain;display:block;}
+/* ── cabecera de escritorio (v1.2) ── */
+.header{padding:16px 28px;}
+.header .logo-mark.hdr-logo-btn{width:52px;height:52px;cursor:pointer;transition:transform .12s,filter .15s;}
+.hdr-logo-btn:hover{filter:drop-shadow(0 0 10px rgba(0,229,255,.45));}
+.hdr-logo-btn:active{transform:scale(.93);}
+.header h1{font-size:25px;}
+.header-period .pb-field{flex-direction:column !important;align-items:flex-start !important;gap:5px !important;}
+.header-period .period-bar{align-items:flex-end !important;}
+.btn-add.hdr-add{width:44px;height:44px;padding:0;justify-content:center;font-size:24px;line-height:1;border-radius:12px;}
+.drawer-sync{margin-top:6px;}
+.drawer-sync .cloud-pill{font-size:11px;font-weight:500;}
+.drawer-sync .cloud-pill::before{content:none;}
+/* de un vistazo: cabecera, KPIs y la primera fila de gráficos caben justas en la pantalla */
+body:not(.view-mobile) #tab-resumen .section-grid > .chart-card:nth-child(-n+2) .chart-box{height:max(230px, calc(100vh - 447px));max-width:none;}
+body:not(.view-mobile) #tab-resumen .section-grid > .chart-card:nth-child(1) .donut-box{flex:0 0 42%;}
 .install-btn{display:none;}
 .install-btn.show{display:inline-flex;}
 body{padding-bottom:env(safe-area-inset-bottom);}
@@ -381,11 +396,9 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 
 <div class="header">
   <div class="header-brand">
-    <button class="nav-burger" onclick="openDrawer()" aria-label="Menú">☰</button>
-    <img class="logo-mark logo-img" src="logo.svg" alt="Finanzas Personales">
+    <img class="logo-mark logo-img hdr-logo-btn" src="logo.svg" alt="Abrir menú" title="Menú" role="button" tabindex="0" onclick="openDrawer()" onkeydown="if(event.key==='Enter')openDrawer()">
     <div>
       <h1>Finanzas <span>Personales</span></h1>
-      <div class="header-meta"><span id="header-meta-date">Tracker de Finanzas</span><span class="cloud-pill" id="cloudPill"><i></i><span>—</span></span></div>
     </div>
     <span class="nav-current" id="navCurrentLabel" onclick="openDrawer()">Resumen</span>
     <div class="header-period" id="periodHost"></div>
@@ -396,9 +409,8 @@ body{padding-bottom:env(safe-area-inset-bottom);}
       <button class="prof-btn" data-prof="comunes" onclick="setProfile('comunes')">👥 Comunes</button>
     </div>
     <button class="hbtn install-btn" id="installBtn" onclick="instalaApp()" title="Instalar la app">⬇ <span>Instalar</span></button>
-    <button class="hbtn" onclick="openBackup()" title="Sincronización y copia de seguridad">☁ <span>Datos</span></button>
     <button class="hbtn" onclick="toggleFullscreen()" title="Pantalla completa">⛶</button>
-    <button class="btn-add" onclick="openAdd()">＋ Añadir</button>
+    <button class="btn-add hdr-add" onclick="openAdd()" title="Añadir movimiento" aria-label="Añadir movimiento">＋</button>
     <div class="live-badge"><div class="live-dot"></div><span id="liveCount">—</span></div>
   </div>
 </div>
@@ -407,7 +419,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 <aside class="nav-drawer" id="navDrawer">
   <div class="nav-drawer-head">
     <img class="nav-drawer-logo logo-img" src="logo.svg" alt="">
-    <div class="nav-drawer-title">Finanzas<br>Personales</div>
+    <div class="nav-drawer-title">Finanzas<br>Personales<div class="drawer-sync"><span class="cloud-pill" id="cloudPill"><i></i><span>—</span></span></div></div>
     <button class="nav-drawer-close" onclick="closeDrawer()" aria-label="Cerrar">✕</button>
   </div>
   <nav class="tab-nav-drawer" id="drawerNav"></nav>
@@ -1177,7 +1189,7 @@ function drawArea(canvasId, labels, series){
   const cv = document.getElementById(canvasId);
   const ctx = cv.getContext('2d');
   const ds = series.map(s=>{
-    const g = ctx.createLinearGradient(0,0,0,260);
+    const g = ctx.createLinearGradient(0,0,0,Math.max(cv.parentElement ? cv.parentElement.clientHeight : 260, 200));
     g.addColorStop(0, s.color+'46'); g.addColorStop(1, s.color+'03');
     return {label:s.name, data:s.values, borderColor:s.color, backgroundColor:g, fill:true,
       borderWidth:2.4, tension:0.32, pointRadius:0, pointHoverRadius:4, pointHoverBackgroundColor:s.color};
@@ -1807,7 +1819,7 @@ document.addEventListener('keydown', e=>{
 (function init(){
   const m = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   const n = new Date();
-  document.getElementById('header-meta-date').textContent = `Tracker de Finanzas · ${m[n.getMonth()]} ${n.getFullYear()}`;
+  const _hm = document.getElementById('header-meta-date'); if (_hm) _hm.textContent = `Tracker de Finanzas · ${m[n.getMonth()]} ${n.getFullYear()}`;
   loadDB();
   buildNav();
   document.getElementById('selRango').value = ST.rango;
