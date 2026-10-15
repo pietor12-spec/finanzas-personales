@@ -385,8 +385,46 @@ body.modal-open{overflow:hidden;}
 .drawer-sync .cloud-pill{font-size:11px;font-weight:500;}
 .drawer-sync .cloud-pill::before{content:none;}
 /* de un vistazo: cabecera, KPIs y la primera fila de gráficos caben justas en la pantalla */
-body:not(.view-mobile) #tab-resumen .section-grid > .chart-card:nth-child(-n+2) .chart-box{height:max(230px, calc(100vh - 447px));max-width:none;}
-body:not(.view-mobile) #tab-resumen .section-grid > .chart-card:nth-child(1) .donut-box{flex:0 0 42%;}
+/* ══ ESCRITORIO: Resumen, Ingresos y Gastos y Resumen anual caben enteros en la pantalla ══ */
+body:not(.view-mobile) .tab-content.fit.active{display:flex;flex-direction:column;gap:12px;height:calc(100vh - var(--hdr, 85px));padding:12px 28px 14px;overflow:auto;}
+body:not(.view-mobile) .tab-content.fit > *{margin:0 !important;}
+body:not(.view-mobile) .fit .kpi-grid{flex:none;gap:10px;}
+body:not(.view-mobile) .fit .kpi-card{min-height:0;padding:10px 14px;border-radius:13px;}
+body:not(.view-mobile) .fit .kpi-label{font-size:9.5px;margin-bottom:6px;}
+body:not(.view-mobile) .fit .kpi-value,
+body:not(.view-mobile) .fit .kpi-card.hero .kpi-value{font-size:21px;}
+body:not(.view-mobile) .fit .section-grid{flex:1;min-height:0;gap:12px;grid-template-rows:repeat(2,minmax(0,1fr));}
+body:not(.view-mobile) .fit .chart-card{display:flex;flex-direction:column;min-height:170px;padding:12px 16px;overflow:hidden;}
+body:not(.view-mobile) .fit .chart-title{flex:none;margin-bottom:8px;font-size:11.5px;}
+body:not(.view-mobile) .fit .chart-box,
+body:not(.view-mobile) .fit .chart-box.tall{flex:1;min-height:0;height:auto !important;}
+body:not(.view-mobile) .fit .donut-wrap{flex:1;min-height:0;gap:14px;}
+body:not(.view-mobile) .fit .donut-wrap .donut-box{flex:0 0 38%;max-width:none;height:100%;}
+body:not(.view-mobile) .fit .legend-col{max-height:100%;overflow:auto;}
+body:not(.view-mobile) .fit .lg-row{padding:4px 8px;}
+/* Ingresos y Gastos: lista a la izquierda y top categorías (columnas) a la derecha */
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card{grid-column:auto;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(1){order:1;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(3){order:2;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(2){order:3;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(4){order:4;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2){overflow-y:auto;}
+body:not(.view-mobile) #tab-ingresos .prog-row{padding:6px 0;}
+body:not(.view-mobile) #tab-ingresos .prog-head{margin-bottom:4px;}
+body:not(.view-mobile) #tab-ingresos .prog-pct{display:none;}
+body:not(.view-mobile) #tab-ingresos .collapse-btn{margin-top:8px;padding:6px 12px;}
+/* Resumen anual */
+body:not(.view-mobile) #tab-anual #anual-wrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;}
+body:not(.view-mobile) #tab-anual .year-block{flex:1;min-height:200px;margin:0;gap:12px;}
+body:not(.view-mobile) #tab-anual .year-block{grid-template-rows:minmax(0,1fr);}
+body:not(.view-mobile) #tab-anual .year-card{padding:12px 18px;min-height:0;overflow:hidden;}
+body:not(.view-mobile) #tab-anual .year-card .year-head{margin-bottom:4px;}
+body:not(.view-mobile) #tab-anual .year-card .year-head h3{font-size:18px;}
+body:not(.view-mobile) #tab-anual .year-card .yrow{padding:4px 0;}
+body:not(.view-mobile) #tab-anual .year-card .yrow span:first-child{font-size:12.5px;}
+body:not(.view-mobile) #tab-anual .year-card .yrow span:last-child{font-size:16px;}
+body:not(.view-mobile) #tab-anual .year-card .chart-title{margin-bottom:6px;}
+body:not(.view-mobile) #tab-anual .year-card .chart-box{flex:1;min-height:0;height:auto;}
 .install-btn{display:none;}
 .install-btn.show{display:inline-flex;}
 body{padding-bottom:env(safe-area-inset-bottom);}
@@ -400,7 +438,6 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <div>
       <h1>Finanzas <span>Personales</span></h1>
     </div>
-    <span class="nav-current" id="navCurrentLabel" onclick="openDrawer()">Resumen</span>
     <div class="header-period" id="periodHost"></div>
   </div>
   <div class="header-right">
@@ -448,7 +485,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 </div>
 
 <!-- ══════════ RESUMEN ══════════ -->
-<div class="tab-content active" id="tab-resumen">
+<div class="tab-content fit active" id="tab-resumen">
   <div class="kpi-grid cols3">
     <div class="kpi-card hero hero-green"><div class="kpi-label">Ingresos totales</div><div class="kpi-value up" id="k-ing">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Balance</div><div class="kpi-value" id="k-bal">—</div></div>
@@ -485,7 +522,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 </div>
 
 <!-- ══════════ INGRESOS Y GASTOS ══════════ -->
-<div class="tab-content" id="tab-ingresos">
+<div class="tab-content fit" id="tab-ingresos">
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Media ingresos</div><div class="kpi-value up" id="ig-media-ing">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Media gastos</div><div class="kpi-value down" id="ig-media-gas">—</div></div>
@@ -581,7 +618,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 </div>
 
 <!-- ══════════ RESUMEN ANUAL ══════════ -->
-<div class="tab-content" id="tab-anual">
+<div class="tab-content fit" id="tab-anual">
   <div id="anual-wrap"></div>
 </div>
 
@@ -1097,7 +1134,7 @@ function destroyChart(id){ if (CH[id]){ try{ CH[id].destroy(); }catch(e){} delet
 function upsertChart(id, cfg){
   const cv = document.getElementById(id); if (!cv) return null;
   const ch = CH[id];
-  if (ch && ch.canvas === cv && ch.config && ch.config.type === cfg.type && ch.data.datasets.length === cfg.data.datasets.length){
+  if (ch && ch.canvas === cv && ch.config && ch.config.type === cfg.type && ch.data.datasets.length === cfg.data.datasets.length && (ch.options.indexAxis||'x') === ((cfg.options&&cfg.options.indexAxis)||'x')){
     try {
       ch.data.labels = cfg.data.labels;
       cfg.data.datasets.forEach((d,i)=>Object.assign(ch.data.datasets[i], d));
@@ -1329,8 +1366,11 @@ function renderIngresos(){
   const alto = n => Math.max(n*(BAR+GAP)+52, 150);
   document.getElementById('box-topIng').style.height = alto(topIng.length)+'px';
   document.getElementById('box-topGas').style.height = alto(topGas.length)+'px';
-  if (topIng.length) drawBars('barTopIng', topIng.map(d=>d.name), [{name:'Ingreso', color:C.green, values:topIng.map(d=>d.value)}], true, BAR); else destroyChart('barTopIng');
-  if (topGas.length) drawBars('barTopGas', topGas.map(d=>d.name), [{name:'Gasto', color:C.red, values:topGas.map(d=>d.value)}], true, BAR); else destroyChart('barTopGas');
+  const vertical = (typeof VIEW === 'undefined' || VIEW !== 'mobile');
+  const corta = n => { const w=String(n).split(' '), out=[]; let l=''; w.forEach(p=>{ if((l+' '+p).trim().length>13 && l){ out.push(l); l=p; } else l=(l+' '+p).trim(); }); if(l) out.push(l); return out; };
+  const lab = arr => vertical ? arr.map(d=>corta(d.name)) : arr.map(d=>d.name);
+  if (topIng.length) drawBars('barTopIng', lab(topIng), [{name:'Ingreso', color:C.green, values:topIng.map(d=>d.value)}], !vertical, vertical?undefined:BAR); else destroyChart('barTopIng');
+  if (topGas.length) drawBars('barTopGas', lab(topGas), [{name:'Gasto', color:C.red, values:topGas.map(d=>d.value)}], !vertical, vertical?undefined:BAR); else destroyChart('barTopGas');
 }
 
 /* ── REGISTRO ── */
@@ -2115,6 +2155,8 @@ async function exportBackup(){
 })();
 
 /* ═══════════ AJUSTE DE GRÁFICOS AL ANCHO REAL ═══════════ */
+function midoCabecera(){ const h=document.querySelector('.header'); if(h && h.offsetHeight) document.documentElement.style.setProperty('--hdr', h.offsetHeight+'px'); }
+midoCabecera(); window.addEventListener('resize', midoCabecera); if (document.fonts && document.fonts.ready) document.fonts.ready.then(midoCabecera);
 function reajustaGraficos(){ Object.values(CH).forEach(c=>{ try{ if(c.canvas && c.canvas.offsetParent) c.resize(); }catch(e){} }); }
 var _rgT = null;
 function reajustaLuego(){ clearTimeout(_rgT); _rgT = setTimeout(reajustaGraficos, 120); }
