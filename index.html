@@ -449,6 +449,16 @@ body:not(.view-mobile) #tab-anual .year-card .yrow{justify-content:flex-start;ga
 body:not(.view-mobile) #tab-anual .year-card .yrow span:first-child{flex:0 0 50%;font-size:14.5px !important;}
 body:not(.view-mobile) #tab-anual .year-card .year-head h3{font-size:20px !important;}
 .more-rows{display:none;}
+/* v1.4.4 — móvil: título dentro del rosco y totales grandes en Ingresos y Gastos, igual que en el escritorio */
+body.view-mobile .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;}
+body.view-mobile .donut-center b{font-family:'Syne';font-size:14px;font-weight:800;letter-spacing:.4px;color:var(--text);text-transform:uppercase;}
+body.view-mobile .donut-center span{font-size:9.5px;font-weight:600;letter-spacing:.9px;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+body.view-mobile .donut-box canvas[style*="display: none"] ~ .donut-center{display:none;}
+body.view-mobile #tab-resumen .section-grid > .chart-card:nth-child(1) > .chart-title,
+body.view-mobile #tab-resumen .section-grid > .chart-card:nth-child(3) > .chart-title{display:none;}
+body.view-mobile #tab-ingresos .prog-amt{font-size:11.5px;font-weight:600;}
+body.view-mobile #tab-ingresos .section-grid > .chart-card:nth-child(-n+2) > .chart-title{align-items:center;}
+body.view-mobile #tab-ingresos .section-grid > .chart-card:nth-child(-n+2) > .chart-title .ct-right{font-size:18px !important;letter-spacing:-.4px;}
 body:not(.view-mobile) #tab-registro .chart-card,
 body:not(.view-mobile) #tab-categorias .chart-card{flex:1;min-height:0;}
 body:not(.view-mobile) .fit .table-wrap{flex:1;min-height:0;overflow:hidden;}
