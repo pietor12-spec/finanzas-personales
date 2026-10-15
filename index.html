@@ -525,7 +525,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
   <div class="kpi-grid cols3">
     <div class="kpi-card hero hero-green"><div class="kpi-label">Ingresos totales</div><div class="kpi-value up" id="k-ing">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Ingreso medio / mes</div><div class="kpi-value up" id="k-imed">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Balance</div><div class="kpi-value gold" id="k-bal">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Balance</div><div class="kpi-value accent" id="k-bal">—</div></div>
     <div class="kpi-card hero hero-red"><div class="kpi-label">Gastos totales</div><div class="kpi-value down" id="k-gas">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Gasto medio / mes</div><div class="kpi-value down" id="k-gmed">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Tasa de ahorro</div><div class="kpi-value accent" id="k-tasa">—</div></div>
@@ -551,7 +551,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
       </div>
     </div>
     <div class="chart-card">
-      <div class="chart-title alt">Balance acumulado</div>
+      <div class="chart-title">Balance acumulado</div>
       <div class="chart-box tall"><canvas id="lineBal"></canvas></div>
     </div>
   </div>
@@ -640,7 +640,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Ingreso fijo mensual</div><div class="kpi-value up" id="rc-k3">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Coste fijo mensual</div><div class="kpi-value down" id="rc-k2">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Balance mensual</div><div class="kpi-value gold" id="rc-k4">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Balance mensual</div><div class="kpi-value accent" id="rc-k4">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Recurrentes activos</div><div class="kpi-value accent" id="rc-k1">—</div></div>
   </div>
   <div class="subtab-nav">
@@ -1290,7 +1290,7 @@ function drawBars(canvasId, labels, series, horizontal, thickness){
       scales: horizontal ? {
         x:{grid:{color:'rgba(29,45,66,0.55)'}, border:{display:false}, ticks:{color:C.muted,font:{family:'JetBrains Mono',size:10},callback:v=>eurShort(v)}},
         y:{grid:{display:false}, border:{color:'#1d2d42'}, ticks:{color:C.text,font:{family:'Syne',size:11}}}
-      } : (()=>{ const a=axisScale(); a.x.ticks.maxRotation=0; a.x.ticks.minRotation=0; a.x.ticks.autoSkip=false; return a; })(),
+      } : (()=>{ const a=axisScale(); a.x.ticks.maxRotation=0; a.x.ticks.minRotation=0; a.x.ticks.autoSkip=false; if (typeof VIEW!=='undefined' && VIEW==='mobile') a.x.ticks.font={family:'JetBrains Mono',size:8}; return a; })(),
       plugins:{ legend:{display:series.length>1, labels:{color:C.muted,font:{family:'Syne',size:11,weight:'600'},usePointStyle:true,pointStyle:'circle',boxWidth:8}},
         tooltip:{ backgroundColor:'#0d1420', borderColor:'#1d2d42', borderWidth:1, titleColor:C.text, bodyColor:C.text,
           padding:11, cornerRadius:9, usePointStyle:true, titleFont:{family:'Syne',size:12,weight:'700'}, bodyFont:{family:'JetBrains Mono',size:12},
@@ -1339,7 +1339,7 @@ function renderResumen(){
   const set = (id,txt,cls) => { const e=document.getElementById(id); e.textContent=txt; if(cls!==undefined){ e.className='kpi-value '+cls; } };
   set('k-ing', eur(ing), 'up');
   set('k-gas', eur(gas), 'down');
-  set('k-bal', eur(bal), 'gold');
+  set('k-bal', eur(bal), 'accent');
   set('k-tasa', ing>0 ? Math.round(bal/ing*100)+'%' : '—', 'accent');
   set('k-imed', eur0(ing/meses), 'up');
   set('k-gmed', eur0(gas/meses), 'down');
@@ -1349,7 +1349,7 @@ function renderResumen(){
   drawDonut('donutGas','leg-donut-gas', top5(donutData('Gasto')), 'Sin gastos en este periodo');
   const S = buildSeries();
   drawArea('lineIG', S.x, [{name:'Ingresos',color:C.green,values:S.out.Ingreso},{name:'Gastos',color:C.red,values:S.out.Gasto}]);
-  drawArea('lineBal', S.x, [{name:'Balance',color:C.accent2,values:S.out.Balance}]);
+  drawArea('lineBal', S.x, [{name:'Balance',color:C.accent,values:S.out.Balance}]);
 }
 
 /* ── INGRESOS Y GASTOS ── */
@@ -1406,10 +1406,11 @@ function renderIngresos(){
   const topIng = ingCat.slice(0,6), topGas = gasCat.slice(0,6);
   const BAR = 22, GAP = 16;                       // mismo grosor de barra en ambos gráficos
   const alto = n => Math.max(n*(BAR+GAP)+52, 150);
-  document.getElementById('box-topIng').style.height = alto(topIng.length)+'px';
-  document.getElementById('box-topGas').style.height = alto(topGas.length)+'px';
-  const vertical = (typeof VIEW === 'undefined' || VIEW !== 'mobile');
-  const corta = n => { const w=String(n).split(' '), out=[]; let l=''; w.forEach(p=>{ if((l+' '+p).trim().length>13 && l){ out.push(l); l=p; } else l=(l+' '+p).trim(); }); if(l) out.push(l); return out; };
+  const vertical = true;                           // columnas verticales también en el móvil
+  const _mov = (typeof VIEW !== 'undefined' && VIEW === 'mobile');
+  document.getElementById('box-topIng').style.height = (vertical ? 290 : alto(topIng.length))+'px';
+  document.getElementById('box-topGas').style.height = (vertical ? 290 : alto(topGas.length))+'px';
+  const corta = n => { const w=String(n).split(' '), out=[]; let l=''; w.forEach(p=>{ if((l+' '+p).trim().length>(_mov?9:13) && l){ out.push(l); l=p; } else l=(l+' '+p).trim(); }); if(l) out.push(l); return out; };
   const lab = arr => vertical ? arr.map(d=>corta(d.name)) : arr.map(d=>d.name);
   if (topIng.length) drawBars('barTopIng', lab(topIng), [{name:'Ingreso', color:C.green, values:topIng.map(d=>d.value)}], !vertical, vertical?undefined:BAR); else destroyChart('barTopIng');
   if (topGas.length) drawBars('barTopGas', lab(topGas), [{name:'Gasto', color:C.red, values:topGas.map(d=>d.value)}], !vertical, vertical?undefined:BAR); else destroyChart('barTopGas');
@@ -1550,7 +1551,7 @@ function renderAnual(){
       ${row('Media ingresos', eur(ingT/distinct), C.green)}
       ${row('Gastos', eur(gasT), C.red)}
       ${row('Media gastos', eur(gasT/distinct), C.red)}
-      ${row('Balance', eur(balT), C.gold)}
+      ${row('Balance', eur(balT), C.accent)}
     </div>
     <div class="year-card">
       <div class="chart-title">Ingresos vs Gastos por año</div>
@@ -1566,7 +1567,7 @@ function renderAnual(){
         ${row('Media ingresos', eur(ing/m), C.green)}
         ${row('Gastos anuales', eur(gas), C.red)}
         ${row('Media gastos', eur(gas/m), C.red)}
-        ${row('Balance', eur(bal), C.gold)}
+        ${row('Balance', eur(bal), C.accent)}
       </div>
       <div class="year-card">
         <div class="chart-title">Ingresos vs Gastos por mes · ${y}</div>
