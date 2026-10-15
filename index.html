@@ -733,6 +733,9 @@ body.view-mobile .header,
 body.view-mobile #periodHost{display:none !important;}
 .mvc-burger{background:var(--surface2);border:1px solid var(--border);border-radius:11px;color:var(--text);font-size:20px;line-height:1;padding:10px 12px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
 .mvc-burger:active{border-color:var(--accent);color:var(--accent);}
+.mvc-logo-btn{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s;}
+.mvc-logo-btn:active{transform:scale(.92);}
+body.view-mobile .mvc-top{gap:10px;margin-left:-2px;}
 .mvc-sep{height:2px;background:var(--accent);margin:12px -12px 0;opacity:.85;}
 .mvc-section{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;border-bottom:2px solid var(--accent);color:var(--accent);font-family:'Syne';font-size:14px;font-weight:700;padding:12px 2px 11px;margin-top:6px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
 .mvc-section svg{width:17px;height:17px;flex-shrink:0;}
@@ -868,8 +871,7 @@ body.view-mobile .fab-add{display:block;}
 
 <div id="mvChrome">
   <div class="mvc-top">
-    <button class="mvc-burger" onclick="openDrawer()" aria-label="Menú">☰</button>
-    <img class="logo-mark logo-img" src="logo.svg" alt="Finanzas Personales">
+    <img class="logo-mark logo-img mvc-logo-btn" src="logo.svg" alt="Abrir menú" role="button" tabindex="0" onclick="openDrawer()" onkeydown="if(event.key==='Enter')openDrawer()">
     <div class="mvc-brand">
       <div class="mvc-title">Finanzas <span>Personales</span></div>
       <div class="mv-sync" id="mvSync"><i></i><span>Conectando…</span></div>
