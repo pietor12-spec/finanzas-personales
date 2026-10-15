@@ -425,6 +425,38 @@ body:not(.view-mobile) #tab-anual .year-card .yrow span:first-child{font-size:12
 body:not(.view-mobile) #tab-anual .year-card .yrow span:last-child{font-size:16px;}
 body:not(.view-mobile) #tab-anual .year-card .chart-title{margin-bottom:6px;}
 body:not(.view-mobile) #tab-anual .year-card .chart-box{flex:1;min-height:0;height:auto;}
+/* v1.4 — centro del rosco, Rango/Año iguales, cifras de Ingresos y Gastos, tablas de un vistazo */
+.donut-center{display:none;}
+body:not(.view-mobile) .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;}
+body:not(.view-mobile) .donut-center b{font-family:'Syne';font-size:15px;font-weight:800;letter-spacing:.4px;color:var(--text);text-transform:uppercase;}
+body:not(.view-mobile) .donut-center span{font-size:10.5px;font-weight:600;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+body:not(.view-mobile) .donut-box canvas[style*="display: none"] ~ .donut-center{display:none;}
+body:not(.view-mobile) #tab-resumen .section-grid > .chart-card:nth-child(1) > .chart-title,
+body:not(.view-mobile) #tab-resumen .section-grid > .chart-card:nth-child(3) > .chart-title{display:none;}
+.header .btn-add.hdr-add{margin-left:4px;flex-shrink:0;}
+body:not(.view-mobile) .header-period .pb-sel,
+body:not(.view-mobile) .header-period .pb-stepper{height:36px;width:150px;box-sizing:border-box;}
+body:not(.view-mobile) .header-period .pb-stepper{display:flex;align-items:center;justify-content:space-between;padding:0 4px;}
+body:not(.view-mobile) .header-period .pb-stepper span{min-width:0;flex:1;}
+body:not(.view-mobile) .header-period .period-bar{align-items:flex-start !important;}
+body:not(.view-mobile) #tab-ingresos .prog-name{font-size:12px;}
+body:not(.view-mobile) #tab-ingresos .prog-amt{font-size:11.5px;font-weight:600;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2) > .chart-title{align-items:center;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2) > .chart-title .ct-right{font-size:19px !important;letter-spacing:-.4px;}
+body:not(.view-mobile) #tab-ingresos .collapse-btn{align-self:center;margin:6px auto 0;padding:1px 16px;font-size:12px;line-height:1.4;letter-spacing:0;}
+.more-rows{display:none;}
+body:not(.view-mobile) #tab-registro .chart-card,
+body:not(.view-mobile) #tab-categorias .chart-card{flex:1;min-height:0;}
+body:not(.view-mobile) .fit .table-wrap{flex:1;min-height:0;overflow:hidden;}
+body:not(.view-mobile) .fit .more-rows{align-self:center;margin:6px auto 0;padding:1px 16px;font-size:12px;line-height:1.4;}
+body:not(.view-mobile) .fit .filter-bar{flex:none;}
+body:not(.view-mobile) .fit .filter-bar{padding:10px 16px;}
+body:not(.view-mobile) .fit .data-table th{padding:6px 12px;}
+body:not(.view-mobile) .fit .data-table td{padding:4px 12px;}
+body:not(.view-mobile) .fit .act-btn{width:23px;height:23px;}
+body:not(.view-mobile) .tab-content.fit.expanded{height:auto !important;overflow:visible !important;}
+body:not(.view-mobile) .fit.expanded .chart-card,
+body:not(.view-mobile) .fit.expanded .table-wrap{overflow:visible;}
 .install-btn{display:none;}
 .install-btn.show{display:inline-flex;}
 body{padding-bottom:env(safe-area-inset-bottom);}
@@ -438,6 +470,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <div>
       <h1>Finanzas <span>Personales</span></h1>
     </div>
+    <button class="btn-add hdr-add" onclick="openAdd()" title="Añadir movimiento" aria-label="Añadir movimiento">＋</button>
     <div class="header-period" id="periodHost"></div>
   </div>
   <div class="header-right">
@@ -447,7 +480,6 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     </div>
     <button class="hbtn install-btn" id="installBtn" onclick="instalaApp()" title="Instalar la app">⬇ <span>Instalar</span></button>
     <button class="hbtn" onclick="toggleFullscreen()" title="Pantalla completa">⛶</button>
-    <button class="btn-add hdr-add" onclick="openAdd()" title="Añadir movimiento" aria-label="Añadir movimiento">＋</button>
     <div class="live-badge"><div class="live-dot"></div><span id="liveCount">—</span></div>
   </div>
 </div>
@@ -499,7 +531,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <div class="chart-card">
       <div class="chart-title alt">Ingresos por categoría</div>
       <div class="donut-wrap">
-        <div class="chart-box donut-box"><canvas id="donutIng"></canvas></div>
+        <div class="chart-box donut-box"><canvas id="donutIng"></canvas><div class="donut-center"><b>Ingresos</b><span>por categoría</span></div></div>
         <div class="legend-col" id="leg-donut-ing"></div>
       </div>
     </div>
@@ -510,7 +542,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <div class="chart-card">
       <div class="chart-title">Gastos por categoría</div>
       <div class="donut-wrap">
-        <div class="chart-box donut-box"><canvas id="donutGas"></canvas></div>
+        <div class="chart-box donut-box"><canvas id="donutGas"></canvas><div class="donut-center"><b>Gastos</b><span>por categoría</span></div></div>
         <div class="legend-col" id="leg-donut-gas"></div>
       </div>
     </div>
@@ -554,7 +586,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 </div>
 
 <!-- ══════════ REGISTRO ══════════ -->
-<div class="tab-content" id="tab-registro">
+<div class="tab-content fit" id="tab-registro">
     <div class="filter-bar">
     <div class="pb-field"><span class="pb-label">Tipo</span>
       <select class="pb-sel" id="fReg-tipo" onchange="onRegTipo(this.value)"></select></div>
@@ -574,11 +606,12 @@ body{padding-bottom:env(safe-area-inset-bottom);}
         <tbody id="reg-tbody"></tbody>
       </table>
     </div>
+    <button class="collapse-btn more-rows" onclick="toggleFilas('tab-registro')" title="Ver el resto">▾</button>
   </div>
 </div>
 
 <!-- ══════════ CATEGORÍAS ══════════ -->
-<div class="tab-content" id="tab-categorias">
+<div class="tab-content fit" id="tab-categorias">
   <div class="filter-bar">
     <div class="pb-field"><span class="pb-label">Filtrar</span>
       <select class="pb-sel" id="fCat" onchange="ST.catFilter=this.value;renderCategorias()">
@@ -594,6 +627,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
         <tbody id="cat-tbody"></tbody>
       </table>
     </div>
+    <button class="collapse-btn more-rows" onclick="toggleFilas('tab-categorias')" title="Ver el resto">▾</button>
   </div>
 </div>
 
@@ -1059,6 +1093,7 @@ function buildNav(){
 }
 function setTab(id){
   ST.tab = id;
+  document.querySelectorAll('.tab-content.expanded').forEach(t=>t.classList.remove('expanded'));
   document.querySelectorAll('.tab-content').forEach(el=>{ el.classList.toggle('active', el.id==='tab-'+id); el.classList.remove('enter'); });
   const nueva = document.getElementById('tab-'+id);
   if (nueva){ nueva.classList.add('enter'); setTimeout(()=>nueva.classList.remove('enter'), 520); }
@@ -1251,7 +1286,7 @@ function drawBars(canvasId, labels, series, horizontal, thickness){
       scales: horizontal ? {
         x:{grid:{color:'rgba(29,45,66,0.55)'}, border:{display:false}, ticks:{color:C.muted,font:{family:'JetBrains Mono',size:10},callback:v=>eurShort(v)}},
         y:{grid:{display:false}, border:{color:'#1d2d42'}, ticks:{color:C.text,font:{family:'Syne',size:11}}}
-      } : axisScale(),
+      } : (()=>{ const a=axisScale(); a.x.ticks.maxRotation=0; a.x.ticks.minRotation=0; a.x.ticks.autoSkip=false; return a; })(),
       plugins:{ legend:{display:series.length>1, labels:{color:C.muted,font:{family:'Syne',size:11,weight:'600'},usePointStyle:true,pointStyle:'circle',boxWidth:8}},
         tooltip:{ backgroundColor:'#0d1420', borderColor:'#1d2d42', borderWidth:1, titleColor:C.text, bodyColor:C.text,
           padding:11, cornerRadius:9, usePointStyle:true, titleFont:{family:'Syne',size:12,weight:'700'}, bodyFont:{family:'JetBrains Mono',size:12},
@@ -1319,7 +1354,8 @@ function toggleMore(k){
   MORE[k] = !MORE[k];
   const body = document.getElementById('ig-more-'+k), btn = document.getElementById('ig-btn-'+k);
   body.classList.toggle('open', MORE[k]);
-  btn.textContent = (MORE[k]?'▴ VER MENOS':'▾ VER MÁS CATEGORÍAS');
+  const _esc = (typeof VIEW === 'undefined' || VIEW !== 'mobile');
+  btn.textContent = MORE[k] ? (_esc?'▴':'▴ VER MENOS') : (_esc?'▾':'▾ VER MÁS CATEGORÍAS');
 }
 function progRows(list, total, color){
   if (!list.length) return '<div class="chart-empty">Sin datos en este periodo</div>';
@@ -1354,14 +1390,16 @@ function renderIngresos(){
     const more = document.getElementById('ig-more-'+k), btn = document.getElementById('ig-btn-'+k);
     more.innerHTML = resto.length ? progRows(resto, total, color) : '';
     btn.style.display = resto.length ? 'inline-flex' : 'none';
-    btn.textContent = (MORE[k]?'▴ VER MENOS':`▾ VER ${resto.length} CATEGORÍAS MÁS`);
+    const _esc = (typeof VIEW === 'undefined' || VIEW !== 'mobile');
+    btn.textContent = MORE[k] ? (_esc?'▴':'▴ VER MENOS') : (_esc?'▾':`▾ VER ${resto.length} CATEGORÍAS MÁS`);
+    btn.title = MORE[k] ? 'Ver menos' : `Ver ${resto.length} categorías más`;
     more.classList.toggle('open', MORE[k] && resto.length>0);
   };
   pinta('ing', ingCat, ing, C.green);
   pinta('gas', gasCat, gas, C.red);
 
   // gráficos: mayor arriba (Chart.js pinta el primer dato arriba en barras horizontales)
-  const topIng = ingCat.slice(0,10), topGas = gasCat.slice(0,10);
+  const topIng = ingCat.slice(0,6), topGas = gasCat.slice(0,6);
   const BAR = 22, GAP = 16;                       // mismo grosor de barra en ambos gráficos
   const alto = n => Math.max(n*(BAR+GAP)+52, 150);
   document.getElementById('box-topIng').style.height = alto(topIng.length)+'px';
@@ -1558,6 +1596,7 @@ function renderAhora(){
   else if (ST.tab==='categorias') renderCategorias();
   else if (ST.tab==='recurrentes') renderRecurrentes();
   else if (ST.tab==='anual') renderAnual();
+  if (ST.tab==='registro' || ST.tab==='categorias') requestAnimationFrame(()=>ajustaTabla('tab-'+ST.tab));
 }
 
 /* ── modales ── */
@@ -2153,6 +2192,31 @@ async function exportBackup(){
   const vacio = !DB.categories.length && !DB.records.sergio.length && !DB.records.comunes.length;
   if (vacio && !ghActivo()) setTimeout(()=>{ openBackup(); document.getElementById('gh-msg').innerHTML = '👋 <b>Bienvenido.</b> Este dispositivo aún no tiene datos: pega tu clave de GitHub arriba para traerlos de la nube, o importa una copia <b>.json</b> más abajo.'; }, 300);
 })();
+
+/* ═══════════ TABLAS DE UN VISTAZO (escritorio) ═══════════
+   Se muestran las filas que caben; el resto, con la flecha ▾ */
+function ajustaTabla(tabId){
+  const tab = document.getElementById(tabId); if (!tab || !tab.classList.contains('active')) return;
+  const wrap = tab.querySelector('.table-wrap'), btn = tab.querySelector('.more-rows'); if (!wrap || !btn) return;
+  const rows = [...wrap.querySelectorAll('tbody tr')];
+  rows.forEach(r=>r.style.display='');
+  const movil = (typeof VIEW !== 'undefined' && VIEW === 'mobile');
+  if (movil){ btn.style.display = 'none'; return; }
+  if (tab.classList.contains('expanded')){ btn.style.display = 'block'; btn.textContent = '▴'; btn.title = 'Ver menos'; return; }
+  btn.style.display = 'block';                       // se reserva su hueco antes de medir
+  const lim = wrap.getBoundingClientRect().bottom;
+  let ocultas = 0;
+  rows.forEach(r=>{ if (r.getBoundingClientRect().bottom > lim + 1){ r.style.display = 'none'; ocultas++; } });
+  btn.style.display = ocultas ? 'block' : 'none';
+  btn.textContent = '▾'; btn.title = `Ver ${ocultas} más`;
+}
+function toggleFilas(tabId){
+  const tab = document.getElementById(tabId); if (!tab) return;
+  tab.classList.toggle('expanded');
+  if (!tab.classList.contains('expanded')) window.scrollTo(0,0);
+  ajustaTabla(tabId);
+}
+window.addEventListener('resize', ()=>{ if (ST.tab==='registro' || ST.tab==='categorias') ajustaTabla('tab-'+ST.tab); });
 
 /* ═══════════ AJUSTE DE GRÁFICOS AL ANCHO REAL ═══════════ */
 function midoCabecera(){ const h=document.querySelector('.header'); if(h && h.offsetHeight) document.documentElement.style.setProperty('--hdr', h.offsetHeight+'px'); }
