@@ -454,8 +454,20 @@ body.view-mobile #mvChrome{padding-top:22px !important;}
 body.view-mobile .mvc-top{position:relative;}
 body.view-mobile .mvc-brand{text-align:center;padding-right:54px;}
 body.view-mobile .mvc-title{font-size:20px;letter-spacing:-.5px;}
-body.view-mobile .mv-sync{position:absolute;top:-15px;right:0;margin:0;font-size:8.5px;gap:4px;opacity:.85;}
+body.view-mobile .mv-sync{position:absolute;top:-15px;right:0;margin:0;font-size:7.5px;gap:4px;opacity:.85;}
 body.view-mobile .mv-sync i{width:5px;height:5px;}
+/* v1.6.0 — móvil: botón + arriba a la derecha bajo el estado; título algo menor para que no se corte */
+body.view-mobile .mvc-brand{padding-right:50px;}
+body.view-mobile .mvc-title{font-size:clamp(15px,4.9vw,19px);letter-spacing:-.4px;overflow:visible;text-overflow:clip;}
+body.view-mobile .fab-add{display:none !important;}
+.mvc-add{display:none;}
+body.view-mobile .mvc-add{display:flex;align-items:center;justify-content:center;position:absolute;right:0;top:50%;transform:translateY(-50%);margin-top:4px;width:38px;height:38px;padding:0;border:none;border-radius:11px;background:#00e5ff;color:#04121a;font-family:'Syne',sans-serif;font-size:24px;font-weight:700;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;box-shadow:0 2px 10px rgba(0,229,255,.25);}
+body.view-mobile .mvc-add:active{background:#00c4dd;transform:translateY(-50%) scale(.94);}
+/* selector de perfil en el formulario de movimiento */
+.mr-prof{display:flex;gap:6px;}
+.mr-prof button{flex:1;border-radius:9px;padding:10px 6px;cursor:pointer;font-size:12.5px;font-weight:700;background:transparent;border:1px solid var(--border);color:var(--muted);transition:all .16s;}
+.mr-prof button.on{background:rgba(0,229,255,0.10);border-color:rgba(0,229,255,0.5);color:var(--accent);}
+.mr-prof button.on[data-p="comunes"]{background:rgba(0,230,118,0.10);border-color:rgba(0,230,118,0.55);color:var(--green);}
 /* v1.4.4 — móvil: título dentro del rosco y totales grandes en Ingresos y Gastos, igual que en el escritorio */
 body.view-mobile .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;}
 body.view-mobile .donut-center b{font-family:'Syne';font-size:11.5px;font-weight:800;letter-spacing:.2px;color:var(--text);text-transform:uppercase;}
@@ -578,7 +590,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <div class="chart-card">
       <div class="chart-title alt">Ingresos por categoría</div>
       <div class="donut-wrap">
-        <div class="chart-box donut-box"><canvas id="donutIng"></canvas><div class="donut-center"><b>Ingresos</b><span>por categoría</span></div></div>
+        <div class="chart-box donut-box"><canvas id="donutIng"></canvas><div class="donut-center"><b>Ingresos</b></div></div>
         <div class="legend-col" id="leg-donut-ing"></div>
       </div>
     </div>
@@ -589,7 +601,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <div class="chart-card">
       <div class="chart-title">Gastos por categoría</div>
       <div class="donut-wrap">
-        <div class="chart-box donut-box"><canvas id="donutGas"></canvas><div class="donut-center"><b>Gastos</b><span>por categoría</span></div></div>
+        <div class="chart-box donut-box"><canvas id="donutGas"></canvas><div class="donut-center"><b>Gastos</b></div></div>
         <div class="legend-col" id="leg-donut-gas"></div>
       </div>
     </div>
@@ -710,6 +722,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
       <div><div class="modal-kicker" id="mr-kicker">Nuevo movimiento</div><div class="modal-title" id="mr-title">Añadir registro</div></div>
       <button class="modal-close" onclick="closeModal('mRecord')">✕</button>
     </div>
+    <div class="fg"><label>Perfil</label><div class="mr-prof" id="mr-prof"><button type="button" data-p="sergio" onclick="setRecProf('sergio')">👤 Sergio</button><button type="button" data-p="comunes" onclick="setRecProf('comunes')">👥 Comunes</button></div></div>
     <div class="fg"><label>Tipo</label><select id="mr-tipo" onchange="syncRecordCats()"></select></div>
     <div class="fg-row">
       <div class="fg"><label>Fecha</label><input type="date" id="mr-fecha"></div>
@@ -1006,6 +1019,7 @@ body.view-mobile .fab-add{display:block;}
       <div class="mvc-title">Finanzas <span>Personales</span></div>
       <div class="mv-sync" id="mvSync"><i></i><span>Conectando…</span></div>
     </div>
+    <button type="button" class="mvc-add" onclick="openAdd()" aria-label="Añadir movimiento">+</button>
   </div>
   <div class="mvc-prof">
     <button class="mvc-pb active" data-prof="sergio" onclick="setProfile('sergio')">👤 Sergio</button>
@@ -1672,6 +1686,7 @@ function syncRecordCats(keep){
   if (keep && opts.includes(keep)) sel.value = keep;
 }
 function openAdd(){ openRecordForm(null); }
+function setRecProf(p){ ST.recProf = p; document.querySelectorAll('#mr-prof button').forEach(b=>b.classList.toggle('on', b.dataset.p===p)); }
 function openRecordForm(id){
   const r = id ? recs().find(x=>x.id===id) : null;
   ST.editRecord = r ? r.id : null;
@@ -1684,6 +1699,7 @@ function openRecordForm(id){
   document.getElementById('mr-cant').value = r ? String(r.cantidad).replace('.',',') : '';
   document.getElementById('mr-nota').value = r ? (r.nota||'') : '';
   syncRecordCats(r?r.categoria:null);
+  setRecProf(ST.profile);
   openModal('mRecord');
   if (typeof VIEW === 'undefined' || VIEW !== 'mobile') setTimeout(()=>document.getElementById('mr-cant').focus(),120);
 }
@@ -1693,14 +1709,20 @@ function saveRecord(){
   const cat = document.getElementById('mr-cat').value;
   if (isNaN(val) && tipo!=='Ajuste'){ toast('Introduce una cantidad válida'); return; }
   if (!cat){ toast('Crea antes una categoría para este tipo'); return; }
-  const rec = { id: ST.editRecord || uid(), tipo, cantidad: isNaN(val)?0:val, categoria:cat,
+  const dest = (ST.recProf==='comunes'||ST.recProf==='sergio') ? ST.recProf : ST.profile;
+  const mueve = !!ST.editRecord && dest !== ST.profile;
+  const rec = { id: (ST.editRecord && !mueve) ? ST.editRecord : uid(), tipo, cantidad: isNaN(val)?0:val, categoria:cat,
     fecha: document.getElementById('mr-fecha').value || toISO(new Date()),
     nota: document.getElementById('mr-nota').value.trim(), protegida:false, ts:Date.now() };
-  const list = DB.records[ST.profile];
-  if (ST.editRecord){ const i=list.findIndex(x=>x.id===ST.editRecord); if(i>=0) list[i]=rec; }
-  else list.unshift(rec);
+  if (!DB.records[dest]) DB.records[dest] = [];
+  if (ST.editRecord && !mueve){ const list=DB.records[ST.profile]; const i=list.findIndex(x=>x.id===ST.editRecord); if(i>=0) list[i]=rec; }
+  else {
+    if (mueve){ _tumba(ST.editRecord); DB.records[ST.profile] = DB.records[ST.profile].filter(x=>x.id!==ST.editRecord); }
+    DB.records[dest].unshift(rec);
+  }
   saveAll(); closeModal('mRecord'); renderAll();
-  toast(ST.editRecord ? 'Movimiento actualizado' : 'Movimiento añadido');
+  const nomP = dest==='comunes' ? 'Comunes' : 'Sergio';
+  toast(mueve ? 'Movimiento movido a '+nomP : ST.editRecord ? 'Movimiento actualizado' : (dest!==ST.profile ? 'Movimiento añadido a '+nomP : 'Movimiento añadido'));
   ST.editRecord = null;
 }
 function dupRecord(id){
