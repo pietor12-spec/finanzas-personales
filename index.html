@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
-<script>(function(){var t='light';try{t=localStorage.getItem('ftk:theme')||'light';}catch(e){}document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',t==='dark'?'#060b14':'#F4F5F7');})();</script>
+<script>(function(){var t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',t==='dark'?'#060b14':'#F4F5F7');})();</script>
 <style>
 :root[data-theme="light"] body{background:#F4F5F7;}
 :root[data-theme="light"] #splash{background:#F4F5F7 !important;}
@@ -556,17 +556,16 @@ body{padding-bottom:env(safe-area-inset-bottom);}
   <div class="nav-drawer-head">
     <img class="nav-drawer-logo logo-img" src="logo.svg" alt="">
     <div class="nav-drawer-title">Finanzas<br>Personales<div class="drawer-sync"><span class="cloud-pill" id="cloudPill"><i></i><span>—</span></span></div></div>
-    <button class="nav-drawer-close" onclick="closeDrawer()" aria-label="Cerrar">✕</button>
+    <div class="theme-sw" role="group" aria-label="Tema de la app">
+      <button type="button" data-th="light" aria-label="Tema claro" title="Claro" onclick="setTema('light')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+      <button type="button" data-th="dark" aria-label="Tema oscuro" title="Oscuro" onclick="setTema('dark')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z"/></svg></button>
+    </div>
   </div>
   <nav class="tab-nav-drawer" id="drawerNav"></nav>
   <div class="dr-bottom">
     <div class="dr-prof" role="group" aria-label="Perfil">
       <button class="prof-btn active" data-prof="sergio" onclick="setProfile('sergio')">👤 Sergio</button>
       <button class="prof-btn" data-prof="comunes" onclick="setProfile('comunes')">👥 Comunes</button>
-    </div>
-    <div class="theme-sw" role="group" aria-label="Tema de la app">
-      <button type="button" data-th="light" aria-label="Tema claro" title="Claro" onclick="setTema('light')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
-      <button type="button" data-th="dark" aria-label="Tema oscuro" title="Oscuro" onclick="setTema('dark')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z"/></svg></button>
     </div>
   </div>
   <div class="nav-drawer-foot">
@@ -1183,7 +1182,7 @@ body.view-mobile .toast{bottom:calc(var(--bnav,62px) + 16px);}
   --accent:#3B5BDB; --accent2:#3B5BDB; --green:#0E8A5F; --red:#D93A3A;
   --gold:#B7791F; --text:#0F172A; --muted:#5B6475; --card-glow:0 1px 3px rgba(15,23,42,0.06);
 }
-:root[data-theme="light"] body *:not(svg):not(svg *){font-family:'Manrope',system-ui,-apple-system,sans-serif !important;}
+body *:not(svg):not(svg *){font-family:'Manrope',system-ui,-apple-system,sans-serif !important;}
 :root[data-theme="light"] body{background:#F4F5F7;}
 :root[data-theme="light"] .header{background:#FFFFFF;border-bottom:1px solid #E3E6EB;backdrop-filter:none;}
 :root[data-theme="light"] .hdr-logo-btn:hover{filter:drop-shadow(0 2px 8px rgba(15,23,42,.18));}
@@ -1227,10 +1226,10 @@ body.view-mobile .toast{bottom:calc(var(--bnav,62px) + 16px);}
 :root[data-theme="light"] .kpi-card:hover{border-color:#C9D3F5;box-shadow:0 4px 14px rgba(15,23,42,.08);}
 :root[data-theme="light"] .chart-card:hover{border-color:#E9ECF0;box-shadow:0 1px 3px rgba(15,23,42,0.06);}
 :root[data-theme="light"] .year-card.totales{border-color:#C9D3F5;}
-:root[data-theme="light"] .kpi-value{font-weight:800;letter-spacing:-.5px;}
+:root .kpi-value{font-weight:800;letter-spacing:-.5px;}
 :root[data-theme="light"] .kpi-value.purple{color:#6D5BD0;}
 :root[data-theme="light"] .chart-title::before{background:#3B5BDB;}
-:root[data-theme="light"] .chart-title{color:#0F172A;letter-spacing:.2px;text-transform:none;font-size:14.5px;font-weight:800;}
+:root .chart-title{color:var(--text);letter-spacing:.2px;text-transform:none;font-size:14.5px;font-weight:800;}
 :root[data-theme="light"] .sec-title .sec-badge{background:#EEF0F3;}
 :root[data-theme="light"] .data-table td{border-bottom-color:#EEF0F3;}
 :root[data-theme="light"] .data-table td.name{color:#2B44A8;}
@@ -1267,7 +1266,7 @@ body.view-mobile .toast{bottom:calc(var(--bnav,62px) + 16px);}
 :root[data-theme="light"] body.view-mobile #mvChrome{background:#FFFFFF;border-bottom:1px solid #E3E6EB;}
 :root[data-theme="light"] body.view-mobile #mvPeriodSlot{background:#F4F5F7;}
 :root[data-theme="light"] .mvc-sep{display:none;}
-:root[data-theme="light"] .mvc-title{font-size:17px !important;letter-spacing:-.3px !important;}
+:root .mvc-title{font-size:17px !important;letter-spacing:-.3px !important;}
 :root[data-theme="light"] .mvc-title span{color:inherit;}
 :root[data-theme="light"] .mvc-prof{background:#E6E8EC;border-color:transparent;}
 :root[data-theme="light"] .mvc-pb{font-size:14px;color:#5B6475;padding:9px 4px;}
@@ -1311,7 +1310,7 @@ body.view-mobile .rz-kpi b{font-size:19px;}
 :root[data-theme="dark"] .rz-kl,
 :root[data-theme="dark"] .rz-hero-top,
 :root[data-theme="dark"] .rz-hero-cols span{font-size:13px;letter-spacing:0;text-transform:none;}
-:root[data-theme="dark"] .rz-kpi b{font-size:26px;font-weight:700;letter-spacing:-.6px;}
+:root[data-theme="dark"] .rz-kpi b{font-size:26px;font-weight:800;letter-spacing:-.6px;}
 :root[data-theme="dark"] .rz-ct,
 :root[data-theme="dark"] .chart-title{font-size:15px;letter-spacing:0;text-transform:none;color:var(--text);font-weight:800;}
 :root[data-theme="dark"] .rz-ct::before{display:none;}
@@ -1334,10 +1333,10 @@ body.view-mobile .mvc-title{font-size:clamp(13px,3.9vw,16px);}
 :root[data-theme="light"] .dr-prof{background:#E6E8EC;border-color:transparent;}
 
 /* claro / oscuro: solo el sol y la luna, pequeño, encima de la línea */
-.dr-bottom .theme-sw{align-self:flex-start;gap:2px;padding:3px;margin:0;border-radius:11px;}
-.dr-bottom .theme-sw button{flex:none;width:38px;height:32px;border-radius:8px;padding:0;}
-.dr-bottom .theme-sw button svg{width:18px;height:18px;}
-.dr-bottom .theme-sw button span{display:none;}
+.nav-drawer-head .theme-sw{flex:none;align-self:flex-start;gap:2px;padding:3px;margin:0;border-radius:11px;}
+.nav-drawer-head .theme-sw button{flex:none;width:38px;height:32px;border-radius:8px;padding:0;}
+.nav-drawer-head .theme-sw button svg{width:18px;height:18px;}
+.nav-drawer-head .theme-sw button span{display:none;}
 
 /* móvil: sin barra de abajo (las secciones, en el menú) */
 body.view-mobile .mv-bnav{display:none !important;}
@@ -1352,7 +1351,7 @@ body.view-mobile .rz-hero-top{font-size:14px;}
 body.view-mobile .rz-hero-cols b{font-size:19px;}
 body.view-mobile .rz-split{height:11px;}
 body.view-mobile #tab-resumen .rz-row2{flex:1.9 1 0;min-height:200px;}
-body.view-mobile #tab-resumen .rz-row3{flex:1 1 0;min-height:96px;}
+body.view-mobile #tab-resumen .rz-row3{flex:none;height:178px;}
 body.view-mobile #tab-resumen .rz-list{position:relative;padding:11px 14px 6px;}
 body.view-mobile #tab-resumen .rz-list .rz-ct{font-size:13px;margin-bottom:2px;padding-right:30px;}
 body.view-mobile #tab-resumen .rz-list .rz-r{padding:5px 0;font-size:12.5px;}
@@ -1411,7 +1410,7 @@ const TIPO_COLOR = {Ingreso:C.green, Gasto:C.red, Ajuste:C.muted, Traspaso:C.acc
 const PAL = {
   dark:{ accent:'#00e5ff', accent2:'#7c4dff', green:'#00e676', red:'#ff1744', gold:'#ffd740', text:'#e8f4fc', muted:'#6d8fb0',
     border:'#1d2d42', surface:'#0d1420', surface2:'#111b2a', purple:'#b39ddb', blue:'#63b3ed',
-    grid:'rgba(29,45,66,0.55)', bg:'#080c12', resto:'#4a5a70', fSans:'Syne', fMono:'JetBrains Mono',
+    grid:'rgba(29,45,66,0.55)', bg:'#080c12', resto:'#4a5a70', fSans:'Manrope', fMono:'Manrope',
     pie:['#00e5ff','#7c4dff','#00e676','#ffd740','#ff1744','#1de9b6','#ff9f2e','#b39ddb','#63b3ed','#ff5ac8','#ffab40','#4dd0e1'] },
   light:{ accent:'#3B5BDB', accent2:'#7C93F0', green:'#0E8A5F', red:'#D93A3A', gold:'#B7791F', text:'#0F172A', muted:'#5B6475',
     border:'#E3E6EB', surface:'#FFFFFF', surface2:'#EEF0F3', purple:'#6D5BD0', blue:'#3B5BDB',
