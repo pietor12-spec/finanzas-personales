@@ -1358,6 +1358,11 @@ body.view-mobile #tab-resumen .rz-list .rz-r{padding:5px 0;font-size:12.5px;}
 body.view-mobile #tab-resumen .rz-list .rz-n small{font-size:11px;}
 body.view-mobile #tab-resumen .rz-more{position:absolute;top:7px;right:8px;font-size:12px;padding:4px 6px;line-height:1;}
 body.view-mobile #tab-resumen .rz-line .ct-right{display:none;}
+/* Resumen anual: el balance, más grande */
+#tab-anual .yrow.yrow-bal{border-bottom:none;padding-top:10px;}
+#tab-anual .yrow.yrow-bal span:first-child{font-weight:800;color:var(--text);font-size:15px !important;}
+#tab-anual .yrow.yrow-bal span:last-child{font-size:24px !important;font-weight:800;}
+body.view-mobile #tab-anual .yrow.yrow-bal span:last-child{font-size:21px !important;}
 :root body:not(.view-mobile) .fit .chart-title{font-size:14.5px;}
 </style>
 
@@ -1696,6 +1701,10 @@ function drawDonut(canvasId, legendId, data, emptyMsg){
   }).join('');
 }
 
+/* puntos de la leyenda pequeños y rellenos */
+function leyendaPeq(chart){
+  return Chart.defaults.plugins.legend.labels.generateLabels(chart).map(l=>Object.assign(l,{lineWidth:0, fillStyle:l.strokeStyle||l.fillStyle}));
+}
 function drawArea(canvasId, labels, series){
   if (chartOff()) return noChart(canvasId);
   limpiaGrafico(canvasId);
@@ -1710,7 +1719,7 @@ function drawArea(canvasId, labels, series){
   upsertChart(canvasId, {
     type:'line', data:{labels, datasets:ds},
     options: baseOpts({ interaction:{mode:'index',intersect:false}, scales:axisScale(),
-      plugins:{ legend:{display:true, labels:{color:C.muted, font:{family:C.fSans,size:11,weight:'600'}, usePointStyle:true, pointStyle:'circle', boxWidth:8}},
+      plugins:{ legend:{display:true, labels:{color:C.muted, font:{family:C.fSans,size:11,weight:'600'}, usePointStyle:true, pointStyle:'circle', boxWidth:7, boxHeight:7, generateLabels:leyendaPeq}},
         tooltip:{ backgroundColor:C.surface, borderColor:C.border, borderWidth:1, titleColor:C.text, bodyColor:C.text,
           padding:11, cornerRadius:9, usePointStyle:true, titleFont:{family:C.fSans,size:12,weight:'700'}, bodyFont:{family:C.fMono,size:12},
           callbacks:{ label: c => ` ${c.dataset.label}: ${eur(c.parsed.y)}` } } } })
@@ -1728,7 +1737,7 @@ function drawBars(canvasId, labels, series, horizontal, thickness){
         x:{grid:{color:C.grid}, border:{display:false}, ticks:{color:C.muted,font:{family:C.fMono,size:10},callback:v=>eurShort(v)}},
         y:{grid:{display:false}, border:{color:C.border}, ticks:{color:C.text,font:{family:C.fSans,size:11}}}
       } : (()=>{ const a=axisScale(); a.x.ticks.maxRotation=0; a.x.ticks.minRotation=0; a.x.ticks.autoSkip=false; if (typeof VIEW!=='undefined' && VIEW==='mobile') a.x.ticks.font={family:C.fMono,size:8}; return a; })(),
-      plugins:{ legend:{display:series.length>1, labels:{color:C.muted,font:{family:C.fSans,size:11,weight:'600'},usePointStyle:true,pointStyle:'circle',boxWidth:8}},
+      plugins:{ legend:{display:series.length>1, labels:{color:C.muted,font:{family:C.fSans,size:11,weight:'600'},usePointStyle:true,pointStyle:'circle',boxWidth:7,boxHeight:7,generateLabels:leyendaPeq}},
         tooltip:{ backgroundColor:C.surface, borderColor:C.border, borderWidth:1, titleColor:C.text, bodyColor:C.text,
           padding:11, cornerRadius:9, usePointStyle:true, titleFont:{family:C.fSans,size:12,weight:'700'}, bodyFont:{family:C.fMono,size:12},
           callbacks:{ label: c => ` ${c.dataset.label}: ${eur(horizontal?c.parsed.x:c.parsed.y)}` } } } })
@@ -2073,6 +2082,7 @@ function renderAnual(){
   const distinct = new Set(R.map(r=>(r.fecha||'').slice(0,7)).filter(Boolean)).size||1;
   const mesesRef = y => y<nowY?12:y>nowY?12:nowM+1;
   const row = (l,v,c) => `<div class="yrow"><span>${l}</span><span style="color:${c}">${v}</span></div>`;
+  const rowB = (l,v,c) => row(l,v,c).replace('class="yrow"','class="yrow yrow-bal"');
 
   const ingT = sumAll('Ingreso'), gasT = sumAll('Gasto'), balT = ingT-gasT;
   let html = `<div class="year-block">
@@ -2082,7 +2092,7 @@ function renderAnual(){
       ${row('Media ingresos', eur(ingT/distinct), C.green)}
       ${row('Gastos', eur(gasT), C.red)}
       ${row('Media gastos', eur(gasT/distinct), C.red)}
-      ${row('Balance', eur(balT), C.accent)}
+      ${rowB('Balance', eur(balT), C.accent)}
     </div>
     <div class="year-card">
       <div class="chart-title">Ingresos vs Gastos por año</div>
@@ -2098,7 +2108,7 @@ function renderAnual(){
         ${row('Media ingresos', eur(ing/m), C.green)}
         ${row('Gastos anuales', eur(gas), C.red)}
         ${row('Media gastos', eur(gas/m), C.red)}
-        ${row('Balance', eur(bal), C.accent)}
+        ${rowB('Balance', eur(bal), C.accent)}
       </div>
       <div class="year-card">
         <div class="chart-title">Ingresos vs Gastos por mes · ${y}</div>
