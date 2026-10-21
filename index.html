@@ -558,11 +558,17 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <div class="nav-drawer-title">Finanzas<br>Personales<div class="drawer-sync"><span class="cloud-pill" id="cloudPill"><i></i><span>—</span></span></div></div>
     <button class="nav-drawer-close" onclick="closeDrawer()" aria-label="Cerrar">✕</button>
   </div>
-  <div class="theme-sw" role="group" aria-label="Tema de la app">
-    <button type="button" data-th="light" onclick="setTema('light')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span>Claro</span></button>
-    <button type="button" data-th="dark" onclick="setTema('dark')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z"/></svg><span>Oscuro</span></button>
-  </div>
   <nav class="tab-nav-drawer" id="drawerNav"></nav>
+  <div class="dr-bottom">
+    <div class="dr-prof" role="group" aria-label="Perfil">
+      <button class="prof-btn active" data-prof="sergio" onclick="setProfile('sergio')">👤 Sergio</button>
+      <button class="prof-btn" data-prof="comunes" onclick="setProfile('comunes')">👥 Comunes</button>
+    </div>
+    <div class="theme-sw" role="group" aria-label="Tema de la app">
+      <button type="button" data-th="light" aria-label="Tema claro" title="Claro" onclick="setTema('light')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+      <button type="button" data-th="dark" aria-label="Tema oscuro" title="Oscuro" onclick="setTema('dark')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z"/></svg></button>
+    </div>
+  </div>
   <div class="nav-drawer-foot">
     <button onclick="openBackup();closeDrawer()">☁ Sincronización y copia de seguridad</button>
     <button onclick="closeDrawer()">‹ Ocultar</button>
@@ -638,11 +644,11 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 
 <!-- ══════════ INGRESOS Y GASTOS ══════════ -->
 <div class="tab-content fit" id="tab-ingresos">
-  <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">Media ingresos</div><div class="kpi-value up" id="ig-media-ing">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Media gastos</div><div class="kpi-value down" id="ig-media-gas">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Categorías de ingreso</div><div class="kpi-value accent" id="ig-n-ing">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Categorías de gasto</div><div class="kpi-value purple" id="ig-n-gas">—</div></div>
+  <div class="rz-kpis">
+    <div class="rz-kpi"><span class="rz-kl">Media ingresos</span><b class="up" id="ig-media-ing">—</b></div>
+    <div class="rz-kpi"><span class="rz-kl">Media gastos</span><b class="down" id="ig-media-gas">—</b></div>
+    <div class="rz-kpi"><span class="rz-kl">Categorías de ingreso</span><b class="acc" id="ig-n-ing">—</b></div>
+    <div class="rz-kpi"><span class="rz-kl">Categorías de gasto</span><b class="pur" id="ig-n-gas">—</b></div>
   </div>
   <div class="section-grid grid-2">
     <div class="chart-card">
@@ -1287,6 +1293,73 @@ body.view-mobile .toast{bottom:calc(var(--bnav,62px) + 16px);}
 :root[data-theme="light"] #splash .sp-bar{background:#E3E6EB !important;}
 :root[data-theme="light"] #splash .sp-bar i{background:#3B5BDB !important;}
 
+/* ═════════════ v1.8.0 ═════════════ */
+/* Ingresos y Gastos con los KPIs del Resumen */
+.rz-kpi b.up{color:var(--green);} .rz-kpi b.down{color:var(--red);} .rz-kpi b.acc{color:var(--accent);} .rz-kpi b.pur{color:#b39ddb;}
+:root[data-theme="light"] .rz-kpi b.pur{color:#6D5BD0;}
+body:not(.view-mobile) #tab-ingresos.fit.active{gap:16px;padding:18px 28px 18px;}
+body:not(.view-mobile) #tab-ingresos .section-grid{gap:16px;}
+body:not(.view-mobile) #tab-ingresos .chart-card{padding:14px 20px;min-height:0;}
+body:not(.view-mobile) #tab-ingresos .chart-title{margin-bottom:8px;}
+body.view-mobile #tab-resumen .rz-kpis{display:none !important;}
+body.view-mobile .rz-kpis{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px;}
+body.view-mobile #tab-ingresos .rz-kpi:nth-child(n+3){display:none;}
+body.view-mobile .rz-kpi{padding:13px 14px;border-radius:14px;}
+body.view-mobile .rz-kpi b{font-size:19px;}
+
+/* títulos, KPIs, perfiles y «Añadir» del oscuro con las medidas del claro */
+:root[data-theme="dark"] .rz-kl,
+:root[data-theme="dark"] .rz-hero-top,
+:root[data-theme="dark"] .rz-hero-cols span{font-size:13px;letter-spacing:0;text-transform:none;}
+:root[data-theme="dark"] .rz-kpi b{font-size:26px;font-weight:700;letter-spacing:-.6px;}
+:root[data-theme="dark"] .rz-ct,
+:root[data-theme="dark"] .chart-title{font-size:15px;letter-spacing:0;text-transform:none;color:var(--text);font-weight:800;}
+:root[data-theme="dark"] .rz-ct::before{display:none;}
+:root[data-theme="dark"] .btn-add,
+:root[data-theme="dark"] .btn-save{background:#00e5ff;color:#04121a;box-shadow:none;}
+:root[data-theme="dark"] .btn-add:hover,
+:root[data-theme="dark"] .btn-save:hover{background:#00c4dd;opacity:1;}
+:root[data-theme="dark"] body.view-mobile .mvc-add{background:#00e5ff !important;color:#04121a !important;box-shadow:none !important;}
+body.view-mobile .mvc-title{font-size:clamp(13px,3.9vw,16px);}
+
+/* el perfil (Sergio / Comunes) pasa al menú, abajo */
+.header #profSwitch,
+#mvChrome .mvc-prof{display:none !important;}
+.mv-prof-name{font-weight:800;color:var(--text);}
+.dr-bottom{display:flex;flex-direction:column;gap:12px;margin-top:10px;}
+.dr-prof{display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);}
+.dr-prof .prof-btn{flex:1;height:42px;font-size:14px;border-radius:9px;}
+:root[data-theme="dark"] .dr-prof .prof-btn.active{background:#1d2d42;border-color:transparent;color:#e8f4fc;}
+:root[data-theme="dark"] .dr-prof .prof-btn.active.comunes{color:var(--green);}
+:root[data-theme="light"] .dr-prof{background:#E6E8EC;border-color:transparent;}
+
+/* claro / oscuro: solo el sol y la luna, pequeño, encima de la línea */
+.dr-bottom .theme-sw{align-self:flex-start;gap:2px;padding:3px;margin:0;border-radius:11px;}
+.dr-bottom .theme-sw button{flex:none;width:38px;height:32px;border-radius:8px;padding:0;}
+.dr-bottom .theme-sw button svg{width:18px;height:18px;}
+.dr-bottom .theme-sw button span{display:none;}
+
+/* móvil: sin barra de abajo (las secciones, en el menú) */
+body.view-mobile .mv-bnav{display:none !important;}
+body.view-mobile .tab-content{padding-bottom:28px;}
+body.view-mobile .toast{bottom:24px;}
+body.view-mobile #tab-resumen.active{padding-bottom:14px;}
+
+/* móvil: balance y gráfico más grandes; últimos movimientos más pequeño */
+body.view-mobile .rz-hero{gap:10px !important;padding:18px 18px !important;}
+body.view-mobile .rz-hero-bal{font-size:40px !important;letter-spacing:-1.3px;}
+body.view-mobile .rz-hero-top{font-size:14px;}
+body.view-mobile .rz-hero-cols b{font-size:19px;}
+body.view-mobile .rz-split{height:11px;}
+body.view-mobile #tab-resumen .rz-row2{flex:1.9 1 0;min-height:200px;}
+body.view-mobile #tab-resumen .rz-row3{flex:1 1 0;min-height:96px;}
+body.view-mobile #tab-resumen .rz-list{position:relative;padding:11px 14px 6px;}
+body.view-mobile #tab-resumen .rz-list .rz-ct{font-size:13px;margin-bottom:2px;padding-right:30px;}
+body.view-mobile #tab-resumen .rz-list .rz-r{padding:5px 0;font-size:12.5px;}
+body.view-mobile #tab-resumen .rz-list .rz-n small{font-size:11px;}
+body.view-mobile #tab-resumen .rz-more{position:absolute;top:7px;right:8px;font-size:12px;padding:4px 6px;line-height:1;}
+body.view-mobile #tab-resumen .rz-line .ct-right{display:none;}
+:root body:not(.view-mobile) .fit .chart-title{font-size:14.5px;}
 </style>
 
 <div id="mvChrome">
@@ -1294,7 +1367,7 @@ body.view-mobile .toast{bottom:calc(var(--bnav,62px) + 16px);}
     <img class="logo-mark logo-img mvc-logo-btn" src="logo.svg" alt="Abrir menú" role="button" tabindex="0" onclick="openDrawer()" onkeydown="if(event.key==='Enter')openDrawer()">
     <div class="mvc-brand">
       <div class="mvc-title">Finanzas <span>Personales</span></div>
-      <div class="mv-sync" id="mvSync"><i></i><span>Conectando…</span></div>
+      <div class="mv-sync" id="mvSync"><b class="mv-prof-name" id="mvProf">Sergio</b><i></i><span>Conectando…</span></div>
     </div>
     <button type="button" class="mvc-add" onclick="openAdd()" aria-label="Añadir movimiento">+</button>
   </div>
@@ -2409,9 +2482,11 @@ function buildMobileTabs(){
   syncMobileChrome();
 }
 function actualizaTitulo(){
+  const nomP = ST.profile==='comunes' ? 'Comunes' : 'Sergio';
+  const mp = document.getElementById('mvProf'); if (mp) mp.textContent = nomP;
   const h = document.getElementById('hdrTitle'); if (!h) return;
   const n = NAV.find(x=>x.id===ST.tab) || NAV[0];
-  h.innerHTML = esc(n.label) + (TABS_CON_PERIODO.includes(ST.tab) ? ` <span>${esc(periodoLabel())}</span>` : '');
+  h.innerHTML = esc(n.label) + ` <span>${TABS_CON_PERIODO.includes(ST.tab) ? esc(periodoLabel())+' · ' : ''}${nomP}</span>`;
 }
 function syncMobileChrome(){
   document.querySelectorAll('.mvc-pb').forEach(b=>b.classList.toggle('active', b.dataset.prof===ST.profile));
