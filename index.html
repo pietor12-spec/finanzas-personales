@@ -1075,10 +1075,10 @@ body.view-mobile .fab-add{display:block;}
 /* escritorio: todo de un vistazo */
 body:not(.view-mobile) #tab-resumen.fit.active{gap:16px;padding:18px 28px 18px;}
 body:not(.view-mobile) #tab-resumen .rz-row2{flex:1;min-height:230px;}
-body:not(.view-mobile) #tab-resumen .rz-row3{flex:none;height:clamp(180px,27vh,250px);}
+body:not(.view-mobile) #tab-resumen .rz-row3{flex:none;height:clamp(222px,27vh,250px);}
 body:not(.view-mobile) #tab-resumen.expanded .rz-row3{height:auto;}
 body:not(.view-mobile) #tab-resumen.expanded .rz-row3{align-items:start;}
-body:not(.view-mobile) #tab-resumen.expanded .rz-list:not(.open){height:clamp(180px,27vh,250px);}
+body:not(.view-mobile) #tab-resumen.expanded .rz-list:not(.open){height:clamp(222px,27vh,250px);}
 body:not(.view-mobile) #tab-resumen.expanded .rz-row2{flex:none;height:340px;}
 body:not(.view-mobile) #tab-resumen .chart-card{padding:16px 20px;min-height:0;}
 body:not(.view-mobile) #tab-resumen .rz-donut .donut-wrap .donut-box{flex:0 0 42%;}
@@ -1351,7 +1351,8 @@ body.view-mobile .rz-hero-top{font-size:14px;}
 body.view-mobile .rz-hero-cols b{font-size:19px;}
 body.view-mobile .rz-split{height:11px;}
 body.view-mobile #tab-resumen .rz-row2{flex:1.9 1 0;min-height:200px;}
-body.view-mobile #tab-resumen .rz-row3{flex:none;height:178px;}
+body.view-mobile #tab-resumen .rz-row3{flex:none;height:156px;}
+.rz-n small.rz-f{display:inline;margin-left:8px;}
 body.view-mobile #tab-resumen .rz-list{position:relative;padding:11px 14px 6px;}
 body.view-mobile #tab-resumen .rz-list .rz-ct{font-size:13px;margin-bottom:2px;padding-right:30px;}
 body.view-mobile #tab-resumen .rz-list .rz-r{padding:5px 0;font-size:12.5px;}
@@ -1830,17 +1831,16 @@ function renderResumen(){
   drawArea('lineIG', S.x, [{name:'Ingresos',color:C.green,values:S.out.Ingreso},{name:'Gastos',color:C.red,values:S.out.Gasto}]);
 
   // ingresos y gastos del mes, de mayor a menor
-  const {y, m} = mesRef();
-  const delMes = R.filter(r=>{ const p=(r.fecha||'').split('-'); return +p[0]===y && +p[1]-1===m; });
+  const delMes = pr;   // lo del periodo elegido (mes, año o todo)
   const porCat = tipo => { const mp={}; delMes.filter(r=>r.tipo===tipo).forEach(r=>{ mp[r.categoria]=(mp[r.categoria]||0)+r.cantidad; });
     return Object.entries(mp).map(([name,value])=>({name,value})).sort((a,b)=>b.value-a.value); };
   const mi = porCat('Ingreso'), mg = porCat('Gasto');
-  const nomMes = MESES[m].toLowerCase() + (y!==nowY ? ' '+y : '');
+  const nomMes = ST.rango==='Mensual' ? MESES[ST.month].toLowerCase() + (ST.year!==nowY ? ' '+ST.year : '') : ST.rango==='Anual' ? String(ST.year) : 'histórico';
   txt('rz-mes-i', nomMes); txt('rz-mes-g', nomMes);
   txt('rz-tot-i', mi.length ? eur(mi.reduce((a,d)=>a+d.value,0)) : '');
   txt('rz-tot-g', mg.length ? eur(mg.reduce((a,d)=>a+d.value,0)) : '');
-  document.getElementById('rz-ing').innerHTML = rzFilas(mi, 'up', 'Sin ingresos este mes');
-  document.getElementById('rz-gas').innerHTML = rzFilas(mg, 'down', 'Sin gastos este mes');
+  document.getElementById('rz-ing').innerHTML = rzFilas(mi, 'up', 'Sin ingresos en este periodo');
+  document.getElementById('rz-gas').innerHTML = rzFilas(mg, 'down', 'Sin gastos en este periodo');
 
   // últimos movimientos
   const hoyISO = toISO(new Date());
@@ -1850,7 +1850,7 @@ function renderResumen(){
     const cls = r.tipo==='Ingreso' ? 'up' : r.tipo==='Gasto' ? 'down' : '';
     const sig = r.tipo==='Ingreso' ? '+' : r.tipo==='Gasto' ? '−' : '';
     const p = (r.fecha||'').split('-'); const f = p.length===3 ? `${+p[2]} ${MESES[+p[1]-1].slice(0,3).toLowerCase()}` : '';
-    return `<div class="rz-r"><span class="rz-n">${esc(r.categoria||r.tipo)}<small>${f}${r.nota?' · '+esc(r.nota):''}</small></span><b class="${cls}">${sig}${eur(r.cantidad)}</b></div>`;
+    return `<div class="rz-r"><span class="rz-n" title="${esc(r.nota||'')}">${esc(r.categoria||r.tipo)}<small class="rz-f">${f}</small></span><b class="${cls}">${sig}${eur(r.cantidad)}</b></div>`;
   }).join('');
 
   const tab = document.getElementById('tab-resumen');
