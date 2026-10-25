@@ -1362,8 +1362,12 @@ body.view-mobile #tab-resumen .rz-line .ct-right{display:none;}
 /* Resumen anual: el balance, más grande */
 #tab-anual .yrow.yrow-bal{border-bottom:none;padding-top:10px;}
 #tab-anual .yrow.yrow-bal span:first-child{font-weight:800;color:var(--text);font-size:15px !important;}
-#tab-anual .yrow.yrow-bal span:last-child{font-size:24px !important;font-weight:800;}
-body.view-mobile #tab-anual .yrow.yrow-bal span:last-child{font-size:21px !important;}
+#tab-anual .yrow.yrow-bal span:last-child{font-size:21px !important;font-weight:800;}
+body.view-mobile #tab-anual .yrow.yrow-bal span:last-child{font-size:19px !important;}
+/* v1.8.9 — Ingresos y Gastos destacados (menos que el Balance) */
+#tab-anual .yrow.yrow-tot span:first-child{font-weight:800;color:var(--text);font-size:15px !important;}
+#tab-anual .yrow.yrow-tot span:last-child{font-size:18.5px !important;font-weight:800;}
+body.view-mobile #tab-anual .yrow.yrow-tot span:last-child{font-size:17px !important;}
 /* ═════ v1.8.4 ═════ */
 /* KPIs: todo centrado */
 .rz-kpi{align-items:center;text-align:center;}
@@ -2170,14 +2174,15 @@ function renderAnual(){
   const mesesRef = y => y<nowY?12:y>nowY?12:nowM+1;
   const row = (l,v,c) => `<div class="yrow"><span>${l}</span><span style="color:${c}">${v}</span></div>`;
   const rowB = (l,v,c) => row(l,v,c).replace('class="yrow"','class="yrow yrow-bal"');
+  const rowT = (l,v,c) => row(l,v,c).replace('class="yrow"','class="yrow yrow-tot"');
 
   const ingT = sumAll('Ingreso'), gasT = sumAll('Gasto'), balT = ingT-gasT;
   let html = `<div class="year-block">
     <div class="year-card totales">
       <div class="year-head"><h3>TOTALES · ${ST.profile==='sergio'?'SERGIO':'COMUNES'}</h3></div>
-      ${row('Ingresos', eur(ingT), C.green)}
+      ${rowT('Ingresos', eur(ingT), C.green)}
       ${row('Media ingresos', eur(ingT/distinct), C.green)}
-      ${row('Gastos', eur(gasT), C.red)}
+      ${rowT('Gastos', eur(gasT), C.red)}
       ${row('Media gastos', eur(gasT/distinct), C.red)}
       ${rowB('Balance', eur(balT), C.accent)}
     </div>
@@ -2191,9 +2196,9 @@ function renderAnual(){
     html += `<div class="year-block">
       <div class="year-card">
         <div class="year-head"><h3>${y}</h3></div>
-        ${row('Ingresos anuales', eur(ing), C.green)}
+        ${rowT('Ingresos anuales', eur(ing), C.green)}
         ${row('Media ingresos', eur(ing/m), C.green)}
-        ${row('Gastos anuales', eur(gas), C.red)}
+        ${rowT('Gastos anuales', eur(gas), C.red)}
         ${row('Media gastos', eur(gas/m), C.red)}
         ${rowB('Balance', eur(bal), C.accent)}
       </div>
