@@ -644,10 +644,10 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 <!-- ══════════ INGRESOS Y GASTOS ══════════ -->
 <div class="tab-content fit" id="tab-ingresos">
   <div class="rz-kpis">
-    <div class="rz-kpi"><span class="rz-kl">Media ingresos</span><b class="up" id="ig-media-ing">—</b></div>
-    <div class="rz-kpi"><span class="rz-kl">Media gastos</span><b class="down" id="ig-media-gas">—</b></div>
-    <div class="rz-kpi"><span class="rz-kl">Categorías de ingreso</span><b class="acc" id="ig-n-ing">—</b></div>
-    <div class="rz-kpi"><span class="rz-kl">Categorías de gasto</span><b class="pur" id="ig-n-gas">—</b></div>
+    <div class="rz-kpi"><span class="rz-kl">Ingresos</span><b class="up" id="ig-k-ing">—</b><em id="ig-media-ing">—</em></div>
+    <div class="rz-kpi"><span class="rz-kl">Gastos</span><b class="down" id="ig-k-gas">—</b><em id="ig-media-gas">—</em></div>
+    <div class="rz-kpi"><span class="rz-kl">Balance</span><b class="acc" id="ig-k-bal">—</b><em>Ingresos − gastos</em></div>
+    <div class="rz-kpi"><span class="rz-kl">Tasa de ahorro</span><b class="acc" id="ig-k-tasa">—</b><div class="rz-prog"><i id="ig-k-tbar"></i></div></div>
   </div>
   <div class="section-grid grid-2">
     <div class="chart-card">
@@ -1364,6 +1364,27 @@ body.view-mobile #tab-resumen .rz-line .ct-right{display:none;}
 #tab-anual .yrow.yrow-bal span:first-child{font-weight:800;color:var(--text);font-size:15px !important;}
 #tab-anual .yrow.yrow-bal span:last-child{font-size:24px !important;font-weight:800;}
 body.view-mobile #tab-anual .yrow.yrow-bal span:last-child{font-size:21px !important;}
+/* ═════ v1.8.4 ═════ */
+/* KPIs: todo centrado */
+.rz-kpi{align-items:center;text-align:center;}
+.rz-kpi .rz-prog{align-self:stretch;}
+body.view-mobile #tab-ingresos .rz-kpi:nth-child(n+3){display:flex;}
+/* Resumen, fila de abajo: títulos en medio y cifras de cada fila en un tono más claro que el total */
+#tab-resumen .rz-list .rz-ct{justify-content:center;position:relative;text-align:center;}
+#tab-resumen .rz-list .rz-ct > span:first-child{flex:none;}
+#tab-resumen .rz-list .rz-ct .rz-tot{position:absolute;right:0;top:50%;transform:translateY(-50%);}
+#tab-resumen .rz-r b.up{color:color-mix(in srgb, var(--green) 60%, #fff);}
+#tab-resumen .rz-r b.down{color:color-mix(in srgb, var(--red) 60%, #fff);}
+:root[data-theme="light"] #tab-resumen .rz-r b.up{color:color-mix(in srgb, var(--green) 78%, #fff);}
+:root[data-theme="light"] #tab-resumen .rz-r b.down{color:color-mix(in srgb, var(--red) 78%, #fff);}
+body.view-mobile #tab-resumen .rz-list .rz-ct{padding-right:0;}
+/* Ingresos y Gastos: cifras de cada categoría algo más grandes (menos que el total) */
+body:not(.view-mobile) #tab-ingresos .prog-amt,
+body.view-mobile #tab-ingresos .prog-amt{font-size:13.5px;font-weight:700;}
+/* Resumen anual: «TOTALES · SERGIO» en blanco y cifras centradas con el balance */
+.year-card.totales .year-head h3{color:var(--text) !important;}
+#tab-anual .year-card .yrow span:last-child{flex:0 0 170px;text-align:center;}
+body.view-mobile #tab-anual .year-card .yrow span:last-child{flex:0 0 150px;}
 :root body:not(.view-mobile) .fit .chart-title{font-size:14.5px;}
 </style>
 
@@ -1901,11 +1922,17 @@ function toggleMore(k){
   const _esc = (typeof VIEW === 'undefined' || VIEW !== 'mobile');
   btn.textContent = MORE[k] ? (_esc?'▴':'▴ VER MENOS') : (_esc?'▾':'▾ VER MÁS CATEGORÍAS');
 }
+/* el mismo color, un poco más claro (para las cifras de cada categoría) */
+function aclara(h){
+  const m = /^#?([0-9a-f]{6})$/i.exec(h||''); if (!m) return h;
+  const n = parseInt(m[1],16), f = (typeof TEMA!=='undefined' && TEMA==='light') ? 0.22 : 0.4;
+  return '#'+[n>>16,(n>>8)&255,n&255].map(v=>Math.round(v+(255-v)*f).toString(16).padStart(2,'0')).join('');
+}
 function progRows(list, total, color){
   if (!list.length) return '<div class="chart-empty">Sin datos en este periodo</div>';
   return list.map(c=>{
     const pct = total ? Math.round(c.value/total*100) : 0;
-    return `<div class="prog-row"><div class="prog-head"><span class="prog-name">${esc(c.name)}</span><span class="prog-amt" style="color:${color}">${eur(c.value)}</span></div>
+    return `<div class="prog-row"><div class="prog-head"><span class="prog-name">${esc(c.name)}</span><span class="prog-amt" style="color:${aclara(color)}">${eur(c.value)}</span></div>
       <div class="prog-pct" style="margin-bottom:6px">${pct}%</div>
       <div class="prog-bar"><i style="width:${Math.max(pct,1)}%;background-color:${color}"></i></div></div>`;
   }).join('');
@@ -1917,12 +1944,14 @@ function renderIngresos(){
   const distinct = new Set(R.map(r=>(r.fecha||'').slice(0,7)).filter(Boolean)).size||1;
   const mediaDiv = ST.rango==='Total' ? distinct : (ST.year<nowY?12:ST.year>nowY?12:nowM+1);
   const base = ST.rango==='Total' ? R : R.filter(r=>{const p=(r.fecha||'').split('-'); return +p[0]===ST.year;});
-  document.getElementById('ig-media-ing').textContent = eur(sumBy(base,'Ingreso')/mediaDiv);
-  document.getElementById('ig-media-gas').textContent = eur(sumBy(base,'Gasto')/mediaDiv);
+  const _t = ing>0 ? Math.round((ing-gas)/ing*100) : null;
+  const _s = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  _s('ig-k-ing', eur(ing)); _s('ig-k-gas', eur(gas)); _s('ig-k-bal', eur(ing-gas)); _s('ig-k-tasa', _t===null ? '—' : _t+' %');
+  _s('ig-media-ing', ST.rango==='Mensual' ? 'En este mes' : eur0(ing/mediaDiv)+' de media al mes');
+  _s('ig-media-gas', ST.rango==='Mensual' ? 'En este mes' : eur0(gas/mediaDiv)+' de media al mes');
+  const _tb = document.getElementById('ig-k-tbar'); if (_tb) _tb.style.width = Math.max(0, Math.min(100, _t||0))+'%';
 
   const ingCat = donutData('Ingreso'), gasCat = donutData('Gasto');
-  document.getElementById('ig-n-ing').textContent = ingCat.length;
-  document.getElementById('ig-n-gas').textContent = gasCat.length;
   document.getElementById('ig-tot-ing').textContent = eur(ing);
   document.getElementById('ig-tot-gas').textContent = eur(gas);
   document.getElementById('ig-top-lab').textContent = periodoLabel();
