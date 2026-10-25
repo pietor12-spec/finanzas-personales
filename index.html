@@ -1387,6 +1387,17 @@ body.view-mobile #tab-ingresos .prog-amt{font-size:13.5px;font-weight:700;}
 .year-card.totales .year-head h3{color:var(--text) !important;}
 #tab-anual .year-card .yrow span:last-child{flex:0 0 170px;text-align:center;}
 body.view-mobile #tab-anual .year-card .yrow span:last-child{flex:0 0 150px;}
+/* ═════ v1.8.6 — Ingresos y Gastos de un vistazo, sin desplazarse ═════ */
+body:not(.view-mobile) #tab-ingresos .rz-kpi{padding:11px 16px;gap:3px;}
+body:not(.view-mobile) #tab-ingresos .rz-kpi b{font-size:22px !important;}
+body:not(.view-mobile) #tab-ingresos .prog-row{padding:4px 0;}
+body:not(.view-mobile) #tab-ingresos .prog-head{margin-bottom:3px;}
+body:not(.view-mobile) #tab-ingresos .prog-name{font-size:12.5px;}
+body:not(.view-mobile) #tab-ingresos .prog-amt{font-size:12.5px !important;}
+body:not(.view-mobile) #tab-ingresos .prog-bar{height:5px;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2){overflow-y:hidden;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card.ig-open{overflow-y:auto;}
+body:not(.view-mobile) #tab-ingresos .collapse-btn{margin-top:4px;padding:3px 12px;}
 :root body:not(.view-mobile) .fit .chart-title{font-size:14.5px;}
 </style>
 
@@ -1472,7 +1483,8 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7
 const pad = x => String(x).padStart(2,'0');
 const toISO = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const isoToDisplay = iso => { const p=(iso||'').split('-'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : (iso||''); };
-const eur = n => (Number(n)||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €';
+const eurD = n => (Number(n)||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €';
+const eur = n => Math.round(Number(n)||0).toLocaleString('es-ES') + ' €';
 const eur0 = n => Math.round(Number(n)||0).toLocaleString('es-ES') + ' €';
 const eurShort = n => { const a=Math.abs(n); return a>=1000 ? (n/1000).toFixed(1).replace('.0','')+'K' : String(Math.round(n)); };
 const tipoLabel = t => t;
@@ -1917,12 +1929,32 @@ function rzMore(btn){
 
 /* ── INGRESOS Y GASTOS ── */
 const MORE = {ing:false, gas:false};
+function ajustaIG(){
+  const tab = document.getElementById('tab-ingresos'); if (!tab || !tab.classList.contains('active')) return;
+  const movil = (typeof VIEW !== 'undefined' && VIEW === 'mobile');
+  ['ing','gas'].forEach(k=>{
+    const list = document.getElementById('ig-list-'+k), more = document.getElementById('ig-more-'+k), btn = document.getElementById('ig-btn-'+k);
+    if (!list || !btn) return;
+    const card = list.closest('.chart-card'), rows = [...list.querySelectorAll('.prog-row')];
+    rows.forEach(r=>r.style.display='');
+    const hayMas = !!(more && more.querySelector('.prog-row'));
+    card.classList.toggle('ig-open', !!MORE[k]);
+    if (movil || MORE[k]){ btn.style.display = (hayMas || MORE[k]) ? 'inline-flex' : 'none'; return; }
+    btn.style.display = 'inline-flex';
+    const lim = card.getBoundingClientRect().bottom - parseFloat(getComputedStyle(card).paddingBottom||0) - btn.offsetHeight - 2;
+    let oc = 0;
+    rows.forEach(r=>{ if (r.getBoundingClientRect().bottom > lim){ r.style.display='none'; oc++; } });
+    btn.style.display = (oc || hayMas) ? 'inline-flex' : 'none';
+  });
+}
+window.addEventListener('resize', ()=>{ if (ST.tab==='ingresos') ajustaIG(); });
 function toggleMore(k){
   MORE[k] = !MORE[k];
   const body = document.getElementById('ig-more-'+k), btn = document.getElementById('ig-btn-'+k);
   body.classList.toggle('open', MORE[k]);
   const _esc = (typeof VIEW === 'undefined' || VIEW !== 'mobile');
   btn.textContent = MORE[k] ? (_esc?'▴':'▴ VER MENOS') : (_esc?'▾':'▾ VER MÁS CATEGORÍAS');
+  ajustaIG();
 }
 /* el mismo color, un poco más claro (para las cifras de cada categoría) */
 function aclara(h){
@@ -1972,6 +2004,7 @@ function renderIngresos(){
   };
   pinta('ing', ingCat, ing, C.green);
   pinta('gas', gasCat, gas, C.red);
+  requestAnimationFrame(ajustaIG);
 
   // gráficos: mayor arriba (Chart.js pinta el primer dato arriba en barras horizontales)
   const topIng = ingCat.slice(0,6), topGas = gasCat.slice(0,6);
@@ -2017,7 +2050,7 @@ function renderRegistro(){
   }).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
 
   const total = filtered.reduce((s,r)=>s+r.cantidad,0);
-  document.getElementById('rg-count').textContent = `${filtered.length} resultados · ${eur(total)}`;
+  document.getElementById('rg-count').textContent = `${filtered.length} resultados · ${eurD(total)}`;
 
   const tb = document.getElementById('reg-tbody');
   if (!filtered.length){ tb.innerHTML = `<tr class="empty"><td colspan="6">No hay movimientos con estos filtros</td></tr>`; return; }
@@ -2027,7 +2060,7 @@ function renderRegistro(){
     return `<tr>
       <td><span class="pill" style="color:${col};background:${col}22;border:1px solid ${col}44">${esc(tipoLabel(r.tipo))}</span></td>
       <td class="name">${esc(tipoLabel(r.categoria))}</td>
-      <td class="r ${amtCls}">${eur(r.cantidad)}</td>
+      <td class="r ${amtCls}">${eurD(r.cantidad)}</td>
       <td style="color:var(--muted)">${isoToDisplay(r.fecha)}</td>
       <td class="${r.nota?'':'note-dim'}" style="font-family:'Syne';font-size:12px">${esc(r.nota||'Sin nota')}</td>
       <td class="r">
