@@ -1407,6 +1407,20 @@ body:not(.view-mobile) #tab-resumen .rz-row2{min-height:160px !important;}
 body:not(.view-mobile) #tab-resumen .rz-row3{height:clamp(200px,27vh,250px) !important;}
 body:not(.view-mobile) #tab-resumen.expanded .rz-list:not(.open){height:clamp(200px,27vh,250px) !important;}
 body.view-mobile #tab-resumen .rz-ct .rz-tot{font-size:16px !important;}
+/* ═════ v1.8.8 — listas que llenan su tarjeta: filas repartidas, letra mayor, flecha pequeña ═════ */
+body:not(.view-mobile) #tab-resumen .rz-list{padding-bottom:6px !important;}
+body:not(.view-mobile) #tab-resumen .rz-r{flex:1 0 auto;padding:5px 0 !important;font-size:14px;}
+body:not(.view-mobile) #tab-resumen .rz-r b{font-size:14.5px !important;}
+body:not(.view-mobile) #tab-resumen .rz-n small.rz-f{font-size:12px;}
+body:not(.view-mobile) #tab-resumen .rz-more{font-size:12px;line-height:12px;height:14px;padding:0 18px;margin-top:2px;}
+body.view-mobile #tab-resumen .rz-r{flex:1 0 auto;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2){padding-bottom:6px !important;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2) > .prog-list:not(.collapse-body){flex:1 0 auto;display:flex;flex-direction:column;}
+body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2) > .prog-list:not(.collapse-body) > .prog-row{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;padding:4px 0;}
+body:not(.view-mobile) #tab-ingresos .prog-name{font-size:13.5px !important;}
+body:not(.view-mobile) #tab-ingresos .prog-amt{font-size:14.5px !important;}
+body:not(.view-mobile) #tab-ingresos .prog-bar{height:6px;}
+body:not(.view-mobile) #tab-ingresos .collapse-btn{margin-top:auto;padding:0 12px;height:16px;line-height:14px;font-size:10px;border-radius:7px;}
 :root body:not(.view-mobile) .fit .chart-title{font-size:14.5px;}
 </style>
 
@@ -1950,7 +1964,7 @@ function ajustaIG(){
     card.classList.toggle('ig-open', !!MORE[k]);
     if (movil || MORE[k]){ btn.style.display = (hayMas || MORE[k]) ? 'inline-flex' : 'none'; return; }
     btn.style.display = 'inline-flex';
-    const lim = card.getBoundingClientRect().bottom - parseFloat(getComputedStyle(card).paddingBottom||0) - btn.offsetHeight - 2;
+    const lim = Math.min(btn.getBoundingClientRect().top, card.getBoundingClientRect().bottom - parseFloat(getComputedStyle(card).paddingBottom||0) - btn.offsetHeight) + 1;
     let oc = 0;
     rows.forEach(r=>{ if (r.getBoundingClientRect().bottom > lim){ r.style.display='none'; oc++; } });
     btn.style.display = (oc || hayMas) ? 'inline-flex' : 'none';
