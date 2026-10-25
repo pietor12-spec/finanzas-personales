@@ -1374,10 +1374,12 @@ body.view-mobile #tab-ingresos .rz-kpi:nth-child(n+3){display:flex;}
 #tab-resumen .rz-list .rz-ct > span:first-child{flex:none;}
 #tab-resumen .rz-list .rz-ct .rz-tot{position:absolute;right:0;top:50%;transform:translateY(-50%);}
 #tab-resumen .rz-r b.up{color:color-mix(in srgb, var(--green) 60%, #fff);}
-#tab-resumen .rz-r b.down{color:color-mix(in srgb, var(--red) 60%, #fff);}
+#tab-resumen .rz-r b.down{color:color-mix(in srgb, var(--red) 76%, #fff);}
 :root[data-theme="light"] #tab-resumen .rz-r b.up{color:color-mix(in srgb, var(--green) 78%, #fff);}
-:root[data-theme="light"] #tab-resumen .rz-r b.down{color:color-mix(in srgb, var(--red) 78%, #fff);}
+:root[data-theme="light"] #tab-resumen .rz-r b.down{color:color-mix(in srgb, var(--red) 88%, #fff);}
 body.view-mobile #tab-resumen .rz-list .rz-ct{padding-right:0;}
+#tab-resumen .rz-r b{font-size:14.5px;}
+body.view-mobile #tab-resumen .rz-list .rz-r b{font-size:13.5px;}
 /* Ingresos y Gastos: cifras de cada categoría algo más grandes (menos que el total) */
 body:not(.view-mobile) #tab-ingresos .prog-amt,
 body.view-mobile #tab-ingresos .prog-amt{font-size:13.5px;font-weight:700;}
@@ -1810,7 +1812,7 @@ function mesRef(){
 }
 function rzFilas(list, cls, vacio){
   if (!list.length) return `<div class="rz-empty">${vacio}</div>`;
-  return list.map(d=>`<div class="rz-r"><span class="rz-n">${esc(d.name)}</span><b class="${cls}">${eur(d.value)}</b></div>`).join('');
+  return list.map(d=>`<div class="rz-r"><span class="rz-n">${esc(d.name)}</span><b class="${cls}">${eur0(d.value)}</b></div>`).join('');
 }
 function renderResumen(){
   const pr = periodRecords();
@@ -1858,8 +1860,8 @@ function renderResumen(){
   const mi = porCat('Ingreso'), mg = porCat('Gasto');
   const nomMes = ST.rango==='Mensual' ? MESES[ST.month].toLowerCase() + (ST.year!==nowY ? ' '+ST.year : '') : ST.rango==='Anual' ? String(ST.year) : 'histórico';
   txt('rz-mes-i', nomMes); txt('rz-mes-g', nomMes);
-  txt('rz-tot-i', mi.length ? eur(mi.reduce((a,d)=>a+d.value,0)) : '');
-  txt('rz-tot-g', mg.length ? eur(mg.reduce((a,d)=>a+d.value,0)) : '');
+  txt('rz-tot-i', mi.length ? eur0(mi.reduce((a,d)=>a+d.value,0)) : '');
+  txt('rz-tot-g', mg.length ? eur0(mg.reduce((a,d)=>a+d.value,0)) : '');
   document.getElementById('rz-ing').innerHTML = rzFilas(mi, 'up', 'Sin ingresos en este periodo');
   document.getElementById('rz-gas').innerHTML = rzFilas(mg, 'down', 'Sin gastos en este periodo');
 
@@ -1871,7 +1873,7 @@ function renderResumen(){
     const cls = r.tipo==='Ingreso' ? 'up' : r.tipo==='Gasto' ? 'down' : '';
     const sig = r.tipo==='Ingreso' ? '+' : r.tipo==='Gasto' ? '−' : '';
     const p = (r.fecha||'').split('-'); const f = p.length===3 ? `${+p[2]} ${MESES[+p[1]-1].slice(0,3).toLowerCase()}` : '';
-    return `<div class="rz-r"><span class="rz-n" title="${esc(r.nota||'')}">${esc(r.categoria||r.tipo)}<small class="rz-f">${f}</small></span><b class="${cls}">${sig}${eur(r.cantidad)}</b></div>`;
+    return `<div class="rz-r"><span class="rz-n" title="${esc(r.nota||'')}">${esc(r.categoria||r.tipo)}<small class="rz-f">${f}</small></span><b class="${cls}">${sig}${eur0(r.cantidad)}</b></div>`;
   }).join('');
 
   const tab = document.getElementById('tab-resumen');
