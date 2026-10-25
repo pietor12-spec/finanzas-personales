@@ -1388,16 +1388,25 @@ body.view-mobile #tab-ingresos .prog-amt{font-size:13.5px;font-weight:700;}
 #tab-anual .year-card .yrow span:last-child{flex:0 0 170px;text-align:center;}
 body.view-mobile #tab-anual .year-card .yrow span:last-child{flex:0 0 150px;}
 /* ═════ v1.8.6 — Ingresos y Gastos de un vistazo, sin desplazarse ═════ */
-body:not(.view-mobile) #tab-ingresos .rz-kpi{padding:11px 16px;gap:3px;}
-body:not(.view-mobile) #tab-ingresos .rz-kpi b{font-size:22px !important;}
 body:not(.view-mobile) #tab-ingresos .prog-row{padding:4px 0;}
 body:not(.view-mobile) #tab-ingresos .prog-head{margin-bottom:3px;}
 body:not(.view-mobile) #tab-ingresos .prog-name{font-size:12.5px;}
-body:not(.view-mobile) #tab-ingresos .prog-amt{font-size:12.5px !important;}
+body:not(.view-mobile) #tab-ingresos .prog-amt{font-size:13.5px !important;}
 body:not(.view-mobile) #tab-ingresos .prog-bar{height:5px;}
 body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card:nth-child(-n+2){overflow-y:hidden;}
 body:not(.view-mobile) #tab-ingresos .section-grid > .chart-card.ig-open{overflow-y:auto;}
-body:not(.view-mobile) #tab-ingresos .collapse-btn{margin-top:4px;padding:3px 12px;}
+body:not(.view-mobile) #tab-ingresos .collapse-btn{margin-top:auto;align-self:center;padding:3px 12px;}
+/* ═════ v1.8.7 ═════ */
+/* los KPIs nunca se encogen (antes se cortaban en pantallas bajas) */
+#tab-resumen .rz-kpis, #tab-ingresos .rz-kpis{flex:none;}
+/* Resumen abajo: totales más grandes, cifras de cada fila como antes, todo sin desplazarse */
+#tab-resumen .rz-ct .rz-tot{font-size:19px !important;}
+#tab-resumen .rz-r b{font-size:13px !important;}
+body:not(.view-mobile) #tab-resumen .rz-r{padding:6px 0;}
+body:not(.view-mobile) #tab-resumen .rz-row2{min-height:160px !important;}
+body:not(.view-mobile) #tab-resumen .rz-row3{height:clamp(200px,27vh,250px) !important;}
+body:not(.view-mobile) #tab-resumen.expanded .rz-list:not(.open){height:clamp(200px,27vh,250px) !important;}
+body.view-mobile #tab-resumen .rz-ct .rz-tot{font-size:16px !important;}
 :root body:not(.view-mobile) .fit .chart-title{font-size:14.5px;}
 </style>
 
