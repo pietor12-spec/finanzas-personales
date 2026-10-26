@@ -595,12 +595,13 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 <!-- ══════════ RESUMEN ══════════ -->
 <div class="tab-content fit active" id="tab-resumen">
   <div class="rz-hero">
-    <div class="rz-hero-top"><span>Balance · <span id="rh-per">—</span></span><b id="rh-tasa">—</b></div>
+    <div class="rz-hero-top"><span>Balance · <span id="rh-per">—</span></span></div>
     <div class="rz-hero-bal" id="rh-bal">—</div>
     <div class="rz-split"><i class="si" id="rh-si"></i><i class="sg" id="rh-sg"></i></div>
     <div class="rz-hero-cols">
-      <div><span>Ingresos</span><b class="up" id="rh-ing">—</b><em id="rh-imed">—</em></div>
-      <div><span>Gastos</span><b class="down" id="rh-gas">—</b><em id="rh-gmed">—</em></div>
+      <div><b class="up" id="rh-ing">—</b><em id="rh-imed">—</em></div>
+      <div class="rz-hero-ah"><b id="rh-tasa">—</b><em>ahorro</em></div>
+      <div><b class="down" id="rh-gas">—</b><em id="rh-gmed">—</em></div>
     </div>
   </div>
   <div class="rz-kpis">
@@ -1356,6 +1357,22 @@ body.view-mobile .rz-hero-bal{text-align:center;}
 body.view-mobile .rz-hero-cols{gap:6px;}
 body.view-mobile .rz-hero-cols div{align-items:center;text-align:center;}
 body.view-mobile .rz-hero-top > span{padding-right:0;}
+/* v1.9.1 — tarjeta de balance (opción 7·C): brillo cian, balance grande y ahorro entre ingresos y gastos */
+body.view-mobile .rz-hero{text-align:center;gap:12px !important;padding:18px !important;border-color:rgba(0,229,255,.45);
+  background:radial-gradient(120% 90% at 50% 0%,rgba(0,229,255,.16),var(--surface) 60%);box-shadow:0 0 34px rgba(0,229,255,.18);}
+body.view-mobile .rz-hero-top{justify-content:center;text-transform:uppercase !important;letter-spacing:.5px !important;color:#9fdcec;font-size:13px !important;}
+body.view-mobile .rz-hero-bal{font-size:46px !important;letter-spacing:-1.6px;text-shadow:0 0 24px rgba(0,229,255,.45);}
+body.view-mobile .rz-split{height:8px !important;}
+body.view-mobile .rz-hero-cols{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) !important;gap:6px;align-items:center;}
+body.view-mobile .rz-hero-cols b{font-size:clamp(16px,4.6vw,19px) !important;}
+body.view-mobile .rz-hero-cols b.up::before{content:'↑ ';}
+body.view-mobile .rz-hero-cols b.down::before{content:'↓ ';}
+body.view-mobile .rz-hero-cols .rz-hero-ah{padding:0 9px;border-left:1px solid var(--border);border-right:1px solid var(--border);}
+body.view-mobile .rz-hero-ah b{color:var(--accent);font-size:20px !important;}
+body.view-mobile .rz-hero-ah em{font-size:11px !important;}
+:root[data-theme="light"] body.view-mobile .rz-hero{background:#FFFFFF;border-color:#C9D3F5;box-shadow:0 4px 18px rgba(59,91,219,.12);}
+:root[data-theme="light"] body.view-mobile .rz-hero-top{color:var(--muted);}
+:root[data-theme="light"] body.view-mobile .rz-hero-bal{text-shadow:none;}
 body.view-mobile .rz-hero-cols b{font-size:19px;}
 body.view-mobile .rz-split{height:11px;}
 body.view-mobile #tab-resumen .rz-row2{flex:1.9 1 0;min-height:200px;}
@@ -1881,7 +1898,7 @@ function renderResumen(){
 
   // móvil: tarjeta de balance
   txt('rh-per', periodoLabel()); txt('rh-bal', eur(bal));
-  txt('rh-tasa', tasa===null ? '' : 'Ahorro '+tasa+' %');
+  txt('rh-tasa', tasa===null ? '—' : tasa+' %');
   txt('rh-ing', eur(ing)); txt('rh-gas', eur(gas));
   txt('rh-imed', ST.rango==='Mensual' ? 'este mes' : eur0(ing/meses)+' / mes');
   txt('rh-gmed', ST.rango==='Mensual' ? 'este mes' : eur0(gas/meses)+' / mes');
