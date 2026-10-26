@@ -1348,6 +1348,14 @@ body.view-mobile #tab-resumen.active{padding-bottom:14px;}
 body.view-mobile .rz-hero{gap:10px !important;padding:18px 18px !important;}
 body.view-mobile .rz-hero-bal{font-size:40px !important;letter-spacing:-1.3px;}
 body.view-mobile .rz-hero-top{font-size:14px;}
+/* v1.9.0 — tarjeta de balance del móvil: balance en medio; ingresos bajo el verde y gastos bajo el rojo */
+body.view-mobile .rz-hero{position:relative;}
+body.view-mobile .rz-hero-top{justify-content:center;}
+body.view-mobile .rz-hero-top b{position:absolute;top:18px;right:18px;}
+body.view-mobile .rz-hero-bal{text-align:center;}
+body.view-mobile .rz-hero-cols{gap:6px;}
+body.view-mobile .rz-hero-cols div{align-items:center;text-align:center;}
+body.view-mobile .rz-hero-top > span{padding-right:0;}
 body.view-mobile .rz-hero-cols b{font-size:19px;}
 body.view-mobile .rz-split{height:11px;}
 body.view-mobile #tab-resumen .rz-row2{flex:1.9 1 0;min-height:200px;}
@@ -1878,7 +1886,10 @@ function renderResumen(){
   txt('rh-imed', ST.rango==='Mensual' ? 'este mes' : eur0(ing/meses)+' / mes');
   txt('rh-gmed', ST.rango==='Mensual' ? 'este mes' : eur0(gas/meses)+' / mes');
   const si = document.getElementById('rh-si'), sg = document.getElementById('rh-sg');
-  if (si && sg){ const t = ing+gas; si.style.flex = t ? String(ing) : '1'; sg.style.flex = t ? String(gas) : '1'; }
+  if (si && sg){ const t = ing+gas; si.style.flex = t ? String(ing) : '1'; sg.style.flex = t ? String(gas) : '1';
+    // ingresos centrado bajo el verde y gastos bajo el rojo (con un mínimo para que quepan las cifras)
+    const pI = t ? Math.min(0.68, Math.max(0.32, ing/t)) : 0.5;
+    const hc = document.querySelector('.rz-hero-cols'); if (hc) hc.style.gridTemplateColumns = `minmax(0,${pI}fr) minmax(0,${1-pI}fr)`; }
 
   txt('ct-evo', periodoLabel());
 
