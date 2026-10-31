@@ -1373,6 +1373,23 @@ body.view-mobile .rz-hero-ah em{font-size:11px !important;}
 :root[data-theme="light"] body.view-mobile .rz-hero{background:#FFFFFF;border-color:#C9D3F5;box-shadow:0 4px 18px rgba(59,91,219,.12);}
 :root[data-theme="light"] body.view-mobile .rz-hero-top{color:var(--muted);}
 :root[data-theme="light"] body.view-mobile .rz-hero-bal{text-shadow:none;}
+/* v1.9.2 — móvil: deslizar entre pantallas, nombre de la pantalla en la cabecera y botón de perfil junto al + */
+@keyframes swL{from{opacity:.25;transform:translateX(44px)}to{opacity:1;transform:none}}
+@keyframes swR{from{opacity:.25;transform:translateX(-44px)}to{opacity:1;transform:none}}
+body.view-mobile .tab-content.sw-l{animation:swL .28s ease;}
+body.view-mobile .tab-content.sw-r{animation:swR .28s ease;}
+body.view-mobile #mvSync{display:none !important;}
+.mv-screen{display:none;}
+body.view-mobile .mv-screen{display:block;font-size:13px;font-weight:700;color:var(--accent);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mvc-perfil{display:none;}
+body.view-mobile .mvc-perfil{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:46px;height:44px;flex-shrink:0;padding:0;border-radius:14px;
+  border:1.5px solid rgba(0,229,255,.55);background:rgba(0,229,255,.10);color:var(--accent);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+body.view-mobile .mvc-perfil svg{width:18px;height:18px;}
+body.view-mobile .mvc-perfil span{font-size:8.5px;font-weight:800;line-height:1;}
+body.view-mobile .mvc-perfil.comunes{border-color:rgba(0,230,118,.6);background:rgba(0,230,118,.10);color:var(--green);}
+body.view-mobile .mvc-perfil:active{transform:scale(.94);}
+:root[data-theme="light"] body.view-mobile .mvc-perfil{border-color:#C9D3F5;background:#E8EDFF;color:#2B44A8;}
+:root[data-theme="light"] body.view-mobile .mvc-perfil.comunes{border-color:#B5E0CD;background:#E7F5EF;color:#0E8A5F;}
 body.view-mobile .rz-hero-cols b{font-size:19px;}
 body.view-mobile .rz-split{height:11px;}
 body.view-mobile #tab-resumen .rz-row2{flex:1.9 1 0;min-height:200px;}
@@ -1459,7 +1476,9 @@ body:not(.view-mobile) #tab-ingresos .collapse-btn{margin-top:auto;padding:0 12p
     <div class="mvc-brand">
       <div class="mvc-title">Finanzas <span>Personales</span></div>
       <div class="mv-sync" id="mvSync"><b class="mv-prof-name" id="mvProf">Sergio</b><i></i><span>Conectando…</span></div>
+      <div class="mv-screen" id="mvScreen">Resumen</div>
     </div>
+    <button type="button" class="mvc-perfil" id="mvPerfil" onclick="cambiaPerfil()" aria-label="Cambiar de perfil"></button>
     <button type="button" class="mvc-add" onclick="openAdd()" aria-label="Añadir movimiento">+</button>
   </div>
   <div class="mvc-prof">
@@ -2610,13 +2629,41 @@ function buildMobileTabs(){
   if (bn) bn.innerHTML = NAV.map(n=>`<button type="button" class="bn-btn${n.id===ST.tab?' active':''}" data-tab="${n.id}" onclick="setTab('${n.id}');window.scrollTo(0,0)">${ICON[n.id]}<span>${BN_LABEL[n.id]||n.label}</span></button>`).join('');
   syncMobileChrome();
 }
+const ICO_PERFIL = {
+  sergio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+  comunes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="3"/><path d="M15.5 14.2A5.5 5.5 0 0 1 21.5 20"/></svg>'
+};
+function cambiaPerfil(){ setProfile(ST.profile==='comunes' ? 'sergio' : 'comunes'); }
 function actualizaTitulo(){
   const nomP = ST.profile==='comunes' ? 'Comunes' : 'Sergio';
   const mp = document.getElementById('mvProf'); if (mp) mp.textContent = nomP;
+  const ms = document.getElementById('mvScreen'); if (ms){ const nn = NAV.find(x=>x.id===ST.tab) || NAV[0]; ms.textContent = nn.label; }
+  const pb = document.getElementById('mvPerfil');
+  if (pb){ pb.classList.toggle('comunes', ST.profile==='comunes'); pb.innerHTML = ICO_PERFIL[ST.profile==='comunes'?'comunes':'sergio'] + '<span>'+nomP+'</span>'; pb.setAttribute('aria-label', 'Perfil '+nomP+': toca para cambiar'); }
   const h = document.getElementById('hdrTitle'); if (!h) return;
   const n = NAV.find(x=>x.id===ST.tab) || NAV[0];
   h.innerHTML = esc(n.label) + ` <span>${TABS_CON_PERIODO.includes(ST.tab) ? esc(periodoLabel())+' · ' : ''}${nomP}</span>`;
 }
+(function(){
+  let x0=0, y0=0, t0=0, ok=false;
+  const bloquea = el => el && el.closest && el.closest('.table-wrap,.modal-overlay,.nav-drawer,input,select,textarea,.mvc-tabs');
+  document.addEventListener('touchstart', e=>{
+    if (typeof VIEW==='undefined' || VIEW!=='mobile' || e.touches.length!==1){ ok=false; return; }
+    const t = e.touches[0];
+    ok = !bloquea(e.target) && !document.querySelector('.modal-overlay.open') && !document.getElementById('navDrawer').classList.contains('open');
+    x0 = t.clientX; y0 = t.clientY; t0 = Date.now();
+  }, {passive:true});
+  document.addEventListener('touchend', e=>{
+    if (!ok) return; ok = false;
+    const t = e.changedTouches[0], dx = t.clientX-x0, dy = t.clientY-y0;
+    if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy)*1.6 || Date.now()-t0 > 800) return;
+    const i = NAV.findIndex(n=>n.id===ST.tab), j = i + (dx<0 ? 1 : -1);
+    if (j<0 || j>=NAV.length) return;
+    setTab(NAV[j].id); window.scrollTo(0,0);
+    const el = document.getElementById('tab-'+NAV[j].id);
+    if (el){ el.classList.remove('sw-l','sw-r'); void el.offsetWidth; el.classList.add(dx<0?'sw-l':'sw-r'); setTimeout(()=>el.classList.remove('sw-l','sw-r'), 320); }
+  }, {passive:true});
+})();
 function syncMobileChrome(){
   document.querySelectorAll('.mvc-pb').forEach(b=>b.classList.toggle('active', b.dataset.prof===ST.profile));
   const sec = document.getElementById('mvcSection');
