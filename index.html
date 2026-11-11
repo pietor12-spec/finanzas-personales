@@ -24,9 +24,9 @@
 :root[data-theme="light"] #splash .sp-bar i{background:#3B5BDB !important;}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/svg+xml" href="logo.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="logo3.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon3-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon3.png">
 <style>
 </style>
 <style>
@@ -525,7 +525,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
   @media (prefers-reduced-motion:reduce){#splash *{animation:none !important;}}
   </style>
   <h1 class="sp-title">Finanzas <span>Personales</span></h1>
-  <img class="sp-logo" src="logo.svg" alt="">
+  <img class="sp-logo" src="logo3.svg" alt="">
   <div class="sp-bar"><i></i></div>
 </div>
 <script>
@@ -535,7 +535,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 
 <div class="header">
   <div class="header-brand">
-    <img class="logo-mark logo-img hdr-logo-btn" src="logo.svg" alt="Abrir menú" title="Menú" role="button" tabindex="0" onclick="openDrawer()" onkeydown="if(event.key==='Enter')openDrawer()">
+    <img class="logo-mark logo-img hdr-logo-btn" src="logo3.svg" alt="Abrir menú" title="Menú" role="button" tabindex="0" onclick="openDrawer()" onkeydown="if(event.key==='Enter')openDrawer()">
     <h1 class="hdr-title" id="hdrTitle">Resumen <span></span></h1>
     <div class="header-period" id="periodHost"></div>
   </div>
@@ -554,7 +554,7 @@ body{padding-bottom:env(safe-area-inset-bottom);}
 <div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
 <aside class="nav-drawer" id="navDrawer">
   <div class="nav-drawer-head">
-    <img class="nav-drawer-logo logo-img" src="logo.svg" alt="">
+    <img class="nav-drawer-logo logo-img" src="logo3.svg" alt="">
     <div class="nav-drawer-title">Finanzas<br>Personales<div class="drawer-sync"><span class="cloud-pill" id="cloudPill"><i></i><span>—</span></span></div></div>
     <div class="theme-sw" role="group" aria-label="Tema de la app">
       <button type="button" data-th="light" aria-label="Tema claro" title="Claro" onclick="setTema('light')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
@@ -563,6 +563,8 @@ body{padding-bottom:env(safe-area-inset-bottom);}
   </div>
   <nav class="tab-nav-drawer" id="drawerNav"></nav>
   <div class="dr-bottom">
+    <button type="button" class="dr-install" id="drInstall" onclick="descargaApp()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 19h14"/></svg><span id="drInstallTxt">Descargar la app</span></button>
+    <div class="dr-install-help" id="drInstallHelp"></div>
     <div class="dr-prof" role="group" aria-label="Perfil">
       <button class="prof-btn active" data-prof="sergio" onclick="setProfile('sergio')">👤 Sergio</button>
       <button class="prof-btn" data-prof="comunes" onclick="setProfile('comunes')">👥 Comunes</button>
@@ -1327,6 +1329,14 @@ body.view-mobile .mvc-title{font-size:clamp(13px,3.9vw,16px);}
 #mvChrome .mvc-prof{display:none !important;}
 .mv-prof-name{font-weight:800;color:var(--text);}
 .dr-bottom{display:flex;flex-direction:column;gap:12px;margin-top:10px;}
+.dr-install{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 12px;border-radius:12px;cursor:pointer;font:inherit;font-size:14px;font-weight:800;
+  color:#04121a;background:linear-gradient(135deg,#5ef3ff,#00e676);border:0;box-shadow:0 4px 16px rgba(0,229,255,.25);-webkit-tap-highlight-color:transparent;}
+.dr-install svg{width:18px;height:18px;}
+.dr-install:active{transform:scale(.97);}
+.dr-install.hecha{background:var(--surface2);color:var(--text2);box-shadow:none;border:1px solid var(--border);}
+.dr-install-help{display:none;font-size:12.5px;line-height:1.45;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:-4px;}
+.dr-install-help.show{display:block;}
+.dr-install-help b{color:var(--text);}
 .dr-prof{display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);}
 .dr-prof .prof-btn{flex:1;height:42px;font-size:14px;border-radius:9px;}
 :root[data-theme="dark"] .dr-prof .prof-btn.active{background:#1d2d42;border-color:transparent;color:#e8f4fc;}
@@ -1472,7 +1482,7 @@ body:not(.view-mobile) #tab-ingresos .collapse-btn{margin-top:auto;padding:0 12p
 
 <div id="mvChrome">
   <div class="mvc-top">
-    <img class="logo-mark logo-img mvc-logo-btn" src="logo.svg" alt="Abrir menú" role="button" tabindex="0" onclick="openDrawer()" onkeydown="if(event.key==='Enter')openDrawer()">
+    <img class="logo-mark logo-img mvc-logo-btn" src="logo3.svg" alt="Abrir menú" role="button" tabindex="0" onclick="openDrawer()" onkeydown="if(event.key==='Enter')openDrawer()">
     <div class="mvc-brand">
       <div class="mvc-title">Finanzas <span>Personales</span></div>
       <div class="mv-sync" id="mvSync"><b class="mv-prof-name" id="mvProf">Sergio</b><i></i><span>Conectando…</span></div>
@@ -2975,7 +2985,24 @@ window.addEventListener('appinstalled', ()=>{
   _promptInstalar = null;
   const b = document.getElementById('installBtn'); if (b) b.classList.remove('show');
   toast('App instalada');
+  pintaBotonDescarga();
 });
+function appInstalada(){ return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
+function pintaBotonDescarga(){
+  const b = document.getElementById('drInstall'), t = document.getElementById('drInstallTxt'); if (!b) return;
+  const ok = appInstalada(); b.classList.toggle('hecha', ok); t.textContent = ok ? 'App instalada ✓' : 'Descargar la app';
+}
+async function descargaApp(){
+  const h = document.getElementById('drInstallHelp');
+  if (appInstalada()){ toast('Ya estás usando la app instalada'); return; }
+  if (_promptInstalar){ await instalaApp(); return; }
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  h.innerHTML = ios
+    ? 'En el iPhone, abre esta página en <b>Safari</b>, toca <b>Compartir</b> (□↑) y luego <b>Añadir a pantalla de inicio</b>.'
+    : 'Abre el menú del navegador <b>⋮</b> y toca <b>Instalar app</b> o <b>Añadir a pantalla de inicio</b>. En el ordenador, usa el icono de instalar de la barra de direcciones.';
+  h.classList.toggle('show');
+}
+document.addEventListener('DOMContentLoaded', pintaBotonDescarga);
 async function instalaApp(){
   if (!_promptInstalar) return;
   _promptInstalar.prompt();

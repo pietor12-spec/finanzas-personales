@@ -1,9 +1,9 @@
 /* Finanzas Personales — service worker: funciona sin conexión y se actualiza solo */
-const CACHE = 'finanzas-v1.0.2';
+const CACHE = 'finanzas-v1.0.3';
 const CDN = ['fonts.googleapis.com','fonts.gstatic.com','cdnjs.cloudflare.com','cdn.jsdelivr.net'];
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './logo.svg',
-  './icon-192.png', './icon-512.png', './maskable-v2-192.png', './maskable-v2-512.png',
-  './apple-touch-icon.png', './favicon-32.png'];
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './logo3.svg',
+  './icon3-192.png', './icon3-512.png', './maskable3-192.png', './maskable3-512.png',
+  './apple-touch-icon3.png', './favicon3-32.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
